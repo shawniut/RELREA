@@ -11,3 +11,34 @@
  *= require_self
  *= require_tree .
  */
+
+#header{
+	width: 1200px;
+	height: 90px;
+	margin-left:auto;
+  	margin-right: auto;
+  	background: #FBFBFB;
+  	border-bottom:2px solid red;
+
+}
+
+
+#content{
+	width: 1200px;
+	margin-top: 20px;
+	margin-left:auto;
+  	margin-right: auto;
+  	
+}
+
+#title{
+	color: #1E75B3;
+	font:italic bold 30px Georgia, serif;
+	margin-left: 20px;
+	
+}
+#sub-title{
+	font:italic bold 12px Georgia, serif;
+	margin-left: 20px;
+	
+}

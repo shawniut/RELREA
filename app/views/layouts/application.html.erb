@@ -1,14 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>RELREA</title>
+  <title>RELREA-Release Readiness</title>
+  <div id="header">
+  	<div id = "title">
+      <p >RELREA</p>
+    </div>
+    <div id = "sub-title">
+      <p>A tool supporting continious software release readiness assessment
+    </div>
+  </div>
+
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= stylesheet_link_tag "nav" %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+	<div id="content">
+    <div id ="nav-pane">
+      <ul class="accordion">
 
-<%= yield %>
+        <li id="one" class="files"><a href="#one">My Files</a>
+ 
+            <ul class="sub-menu">
+         
+                <li><a href="#one"><em>01</em>Dropbox</a></li>
+         
+                <li><a href="#one"><em>02</em>Skydrive</a></li>
+         
+                <li><a href="#one"><em>03</em>FTP Server</a></li>
+         
+            </ul>
+ 
+        </li>
+     
+        <li id="two" class="mail"><a href="#two">Mail</a></li>
+     
+        <li id="three" class="cloud"><a href="#three">Cloud</a></li>
+     
+        <li id="four" class="sign"><a href="#four">Sign Out</a></li>
+ 
+      </ul>
+    </div>
+		<%= yield %>
 
+ 	</div>
 </body>
 </html>
