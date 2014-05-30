@@ -1,0 +1,35 @@
+// Place all the styles related to the data_service/datasources controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#add-remove-btn-div{
+	float: left;
+	width:25px;
+	height:200px;
+	text-align:center;
+	padding-left: 80px;
+	padding-right: 80px;
+}
+
+.add-remove-btn1{
+	 margin-top: 80px;
+	 margin-left:60px;
+}
+.add-remove-btn2{
+	 margin-top: 5px;
+}
+
+#save-metrics-div{
+	width:700px;
+	height: 30px;
+	padding-left:10px;
+	
+}
+
+.metrics_form{
+	height:220px;
+	float:absolute;
+	background-color: #F9F9F9;
+	padding: 15px;
+}
+

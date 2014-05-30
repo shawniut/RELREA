@@ -1,0 +1,55 @@
+<div class="header1">Define Github Project and Tools</div>
+<div class = "form">
+	<%= form_tag({controller: "data_service/datasources", action: "create"}, remote: "true", method: "POST") %>
+	<table>
+		<tr>
+			<td style="width:110px">
+				<%= label_tag(:repo_name, "Repository name:") %> 
+			</td>
+			<td style="width:40px">
+				<%= text_field(:repo_name, :name) %> <br>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:110px">
+				<%= label_tag(:user_name, "User name:") %> 
+			</td>	
+			<td>
+				<%= text_field(:user_name, :name) %> <br>
+			</tr>
+		</tr>
+		<tr>
+			<td style="width:110px">
+				<%= label_tag(:url, "Github Url:") %> 
+			</td>
+			<td>
+				<%= text_field(:url, :name, size:50) %> <br>
+			</tr>
+		</tr>
+		<tr>
+			<td style="width:110px">
+				Other tools:
+			</td>
+			<td>
+				<%= check_box_tag(:tavis_ci) %>
+				<%= label_tag(:tavis_ci, "Travis-CI") %>
+				<%= check_box_tag(:coverall) %>
+				<%= label_tag(:coverall, "Coverall") %><br>
+			<td>
+		</tr>
+		</table>
+		<p>
+			<%= submit_tag("Show Available Metrics") %>
+		</p>
+	
+</div>
+
+
+
+<div id="metrics" >
+</div>
+
+
+
+
+

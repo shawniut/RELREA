@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rattribute_id: MyString
+  mvalue: 1.5
+  start_date: 2014-05-29
+  end_date: 2014-05-29
+
+two:
+  rattribute_id: MyString
+  mvalue: 1.5
+  start_date: 2014-05-29
+  end_date: 2014-05-29

@@ -1,0 +1,18 @@
+<div class = "form">
+	<div>
+	<h2>Specify the Time Interval</h2>
+	<%= form_tag({controller: "/manage_values", action: "new", id:@Project.id}, :remote => true, :method => 'POST') %>
+	<p>
+		<%= label_tag(:start_date, "From") %>
+		<%= date_field(:project, :start_date) %>
+
+		<%= label_tag(:end_date, "to:") %>
+		<%= date_field(:project, :end_date) %>
+		<%= submit_tag("Show Values") %>
+	</p>
+	</div>
+</div>
+<div id="values">
+</div>
+
+

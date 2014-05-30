@@ -1,0 +1,23 @@
+.header1{
+	
+	//border-bottom:1px solid red;
+	font: bold 15px Tahoma;
+	padding-left: 10px;
+	height: 20px;
+	background-color: #D8D8D8;
+}
+
+.metrics-div{
+	width:250px;
+	float:left;
+	height:200px;
+	margin-left: 10px;
+}
+
+.form{
+	
+	background-color: #F9F9F9;
+	padding: 15px;
+	position:relative;
+	overflow: hidden;
+}

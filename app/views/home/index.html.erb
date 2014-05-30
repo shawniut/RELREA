@@ -1,1 +1,22 @@
+<h1>Prameters</h1>
+<%= @val%>
+
+<h1>Project ID</h1>
+<%= @project_id2%>
+
+
+<h1>name</h1>
+<% Project.find_by(:id =>  @project_id2).rattributes.each do |a|%>
+<%= a.metric.name %>
+<%end%>
+
+
+<h1>IDS</h1>
+<% @ids.each do |i| %>
+<%= i %>
+<%end%>
+
+<h1>Count</h1>
+<%= @count %>
+<%= @ids.size %>
 

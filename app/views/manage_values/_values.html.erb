@@ -1,0 +1,21 @@
+<div>
+	<%= form_tag({controller: "/manage_values", action: "create", id:@Project.id}, :remote => "true",  method: "POST") %>
+	<table class = "bordered">
+			<tr>
+				<th>Readiness attribute</th>
+				<th>Readiness Dimension</th>
+				<th>Current Value</th>
+			</tr>
+			<%@rattributes.each do |r| %>
+				<tr>
+				<td><%=r.metric.name %></td>
+				<td><%=r.metric.dimension %></td>
+				<td><input type="text", id = "<%=r.id%>", name = "<%=r.id%>" value = "<%=r.value%>" readonly></td>
+				</tr>
+			<%end%>
+	</table>
+	<input type="hidden" id = "start_date" name="start_date" value= <%=@start_date%>>
+	<input type="hidden" id = "end_date" name="end_date" value= <%=@end_date%>>
+	<p><%= submit_tag("Save Metric Values") %></p>
+</div>
+<div id = "value-saved"></div>

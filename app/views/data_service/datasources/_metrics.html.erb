@@ -1,0 +1,92 @@
+<%=@Projects.name %>	
+<div class="header1">Select Metrics</div>
+<div class="metrics_form">
+	<%= form_tag({controller: "/home", action: "create"}, method: "POST") %>
+		<div class="metrics-div">
+			Available Metrics:
+			<%= select_tag 'available_metrics', options_from_collection_for_select(Dataservice::Metric.all, :id, :name), multiple: true, size: '10%' %>
+
+		</div>
+
+		<div class="metrics-div">
+			
+			<input type="button" class ="add-remove-btn1" onclick="addMetrics();" value=">>"/> 
+			<input type="button" class ="add-remove-btn2" onclick="removeMetrics();" value="<<"/>
+			
+		</div>
+
+		<div class="metrics-div">
+			Selected Metrics: <br>
+			<select id="selected_metrics" size="10" style="width: 180px">	  
+			</select>
+		</div>
+
+		
+
+		<div id="save-metrics-div">
+			<%= submit_tag("Save Selected Metrics") %>
+		</div>
+		<input type="hidden" id = "project_id" name="project_id" value= <%= @Projects.id %>>
+		<div id="hidden">
+		<div>
+
+</div>
+
+
+
+<script type="text/javascript">
+	function addMetrics() {
+	    var available_metrics_list = document.getElementById("available_metrics");
+	    var selected_metrics_list = document.getElementById("selected_metrics");
+
+	    	var i;
+			for (i = available_metrics_list.length - 1; i>=0; i--) {
+				//alert("I am an alert box!");
+			    if (available_metrics_list.options[i].selected) {
+			      selected_metrics_list.add(available_metrics_list.options[i], selected_metrics_list.length);
+			      available_metrics_list.remove(i);
+			    }
+	  		}
+
+	  		var ids='';
+	  		for (i=0; i<selected_metrics_list.length; i++ ) {
+	  			var hidden_div = document.getElementById("hidden");
+	  			ids += selected_metrics_list.options[i].value; 
+	  			ids +=":";
+	  						  			
+	  		}
+	  		var html_code = '<input type="hidden" id = "ids" name="ids" value="';
+	  		html_code +=ids;
+	  		html_code += '" >';
+	  		// console.log(html_code);  	
+	  		hidden_div.innerHTML = html_code;
+	}
+
+	function removeMetrics() {
+	    var available_metrics_list = document.getElementById("available_metrics");
+	    var selected_metrics_list = document.getElementById("selected_metrics");
+
+	    	var i;
+			for (i = selected_metrics_list.length - 1; i>=0; i--) {
+				//alert("I am an alert box!");
+			    if (selected_metrics_list.options[i].selected) {
+			      available_metrics_list.add(selected_metrics_list.options[i], available_metrics_list.length);
+			      selected_metrics_list.remove(i);
+			    }
+	  		}
+
+	  		var ids='';
+	  		for (i=0; i<selected_metrics_list.length; i++ ) {
+	  			var hidden_div = document.getElementById("hidden");
+	  			ids += selected_metrics_list.options[i].value; 
+	  			ids +=":";
+	  						  			
+	  		}
+	  		var html_code = '<input type="hidden" id = "country" name="country" value="';
+	  		html_code +=ids;
+	  		html_code += '" >';
+	  		// console.log(html_code);  	
+	  		hidden_div.innerHTML = html_code;
+	}
+
+</script>

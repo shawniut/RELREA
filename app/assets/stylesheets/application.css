@@ -31,6 +31,14 @@
   	
 }
 
+#content-view{
+	width: 940px;
+	margin-left: 10px;
+	float: left;
+	
+  	
+}
+
 #title{
 	color: #1E75B3;
 	font:italic bold 30px Georgia, serif;

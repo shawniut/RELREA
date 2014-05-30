@@ -1,0 +1,24 @@
+<div class="header1">Define Relative Weights of the Readiness Attributes</div>
+<div class = "form">
+	<%= form_tag({controller: "/weights", action: "create", id:@project_id}, remote: "true", method: "POST") %>
+	<div>
+	<table class = "bordered">
+		<tr>
+			<th>Readiness attribute</th>
+			<th>Readiness Dimension</th>
+			<th>Relative Weight</th>
+		</tr>
+		<%@rattributes.each do |r| %>
+			<tr>
+			<td><%=r.metric.name %></td>
+			<td><%=r.metric.dimension %></td>
+			<td><input type="text", id = "<%=r.id%>", name = "<%=r.id%>" value = "<%=r.weight%>"></td>
+			</tr>
+		<%end%>
+
+	</table>
+	<p><%= submit_tag("Save Relative Weights") %></p>
+	</div>
+<div id="weights">
+</div>
+

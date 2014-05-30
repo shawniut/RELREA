@@ -1,7 +1,28 @@
 RELREA::Application.routes.draw do
 
+  get "manage_values/index"
+  get "weights/index"
+  get "mfunctions/index"
+  get "charts/index"
   resources :home
+  resources :test
+  resources :charts
+  resources :mfunctions
+  resources :weights
+  resources :settings
+  resources :manage_values do
+    member do
+      post 'new'
+    end
+  end
   get "home/index"
+
+
+
+
+  namespace :data_service do 
+        resources :datasources
+end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
