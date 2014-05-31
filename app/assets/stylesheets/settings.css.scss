@@ -1,3 +1,59 @@
 // Place all the styles related to the settings controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#settings-header{
+	width: 100%;
+	border-bottom:2px solid #D8D8D8;
+	margin-bottom: 10px;
+}
+
+#settings-container{
+
+	width: 100%;
+	overflow: hidden;
+}
+
+.individual-settings-container{
+
+	width: 100%;
+	overflow: hidden;
+	border-bottom:1px solid #D8D8D8;
+
+}
+
+.individual-settings-container:hover{
+
+	background-color: #FCFAF2;
+
+}
+
+.settings-title{
+
+	width: 20%;
+	float:left;
+	font-size: 15px;
+	font-weight: bold;
+	padding-left: 10px;
+	
+}
+
+.settings-desc{
+
+	width:68%;
+	float:left;
+	padding-left: 10px;
+}
+
+.settings-edit{
+
+	width:10%;
+	float:left;
+	text-align: center;
+}
+
+.edit-panel{
+	margin-left: auto;
+	margin-right: auto;
+
+}

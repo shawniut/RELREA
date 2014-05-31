@@ -1,1 +1,89 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="settings-header">
+	<p><h2>Settings</h2></p>
+</div>
+
+<div id = "settings-container">
+	<div class="individual-settings-container">
+		<div class="settings-title">
+			<p>Project info</p>
+		</div>
+		<div class="settings-desc">
+			<p>Manage project info</p>
+		</div>
+		<div class="settings-edit">
+			<p>Edit</p>
+		</div>
+	</div>
+	<div class="individual-settings-container">
+
+		<div class="settings-title">
+			<p>Readiness Attributes</p>
+		</div>
+		<div class="settings-desc">
+			<p>Manage Readiness Attributes</p>
+		</div>
+		<div class="settings-edit">
+			<p><%=link_to "Edit",  {:controller => "data_service/datasources", :action=> "show", :id => '23'}, :method=>"POST", :remote=>"true" %></p>
+		</div>
+		<div id= "attributes-panel">
+		</div>
+	</div>
+	<div class="individual-settings-container">
+
+		<div class="settings-title">
+			<p>Membership Function</p>
+		</div>
+		<div class="settings-desc">
+			<p>Manage Membership Function</p>
+		</div>
+		<div class="settings-edit">
+			<p><%=link_to "Edit",  {:controller => "mfunctions", :action=> "show", :id => '23'}, :method=>"POST", :remote=>"true" %></p>
+		</div>
+		<div id= "mf-panel">
+		</div>
+	</div>
+	<div class="individual-settings-container">
+		<div class="settings-title">
+			<p>Relative Weights</p>
+		</div>
+		<div class="settings-desc">
+			<p>Manage Relative Weights</p>
+		</div>
+		<div class="settings-edit">
+			<p><%=link_to "Edit",  {:controller => "weights", :action=> "show", :id => '23'}, :method=>"POST", :remote=>"true" %></p>
+		</div>
+		<div id= "weights-panel">
+		</div>
+	</div>
+	<div class="individual-settings-container">
+		<div class="settings-title">
+			<p>Decision Strategy</p>
+		</div>
+		<div class="settings-desc">
+			<p>Manage Decision Strategy</p>
+		</div>
+		<div class="settings-edit">
+			<p>Edit</p>
+		</div>
+	</div>
+
+</div>
+
+
+<script type="text/javascript">
+	function hideEditPanel(button) {
+  		button.parentNode.parentNode.parentNode.style.display = 'block';
+  		button.parentNode.parentNode.style.display = 'none';
+	}
+</script>
+
+<script type="text/javascript">
+	function hideDiv(element) {
+  		element.parentNode.parentNode.style.display = 'none';
+	}
+</script>
+
 

@@ -5,6 +5,17 @@ class MfunctionsController < ApplicationController
 
   end
 
+  def show
+
+    @Project = Project.find_by(id:params[:id])
+    respond_to do |format|
+        
+      format.html { render  :controller => "settings", :ation => 'index', :id => params[:id]}
+      format.js
+    end
+
+  end
+
   def create
 
   		@pid = params[:id]

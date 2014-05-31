@@ -12,6 +12,7 @@
 	float:left;
 	height:200px;
 	margin-left: 10px;
+	overflow: hidden;
 }
 
 .form{
@@ -20,4 +21,12 @@
 	padding: 15px;
 	position:relative;
 	overflow: hidden;
+}
+
+.success{
+	margin-top: 10px;
+	background-color: #D8D8D8;
+	font-weight: bold;
+	padding-left: 10px;
+	color: #04B404;
 }

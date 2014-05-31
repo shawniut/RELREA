@@ -6,6 +6,18 @@ class WeightsController < ApplicationController
 
   end
 
+  def show
+    @project_id = params[:id]
+
+    @rattributes = Project.find_by(:id => @project_id).rattributes
+
+    respond_to do |format|
+        
+      format.html { render  :controller => "settings", :ation => 'index', :id => params[:id]}
+      format.js
+    end
+  end
+
   def create
   	@project_id = params[:id]
 

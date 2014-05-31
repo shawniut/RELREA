@@ -9,5 +9,18 @@ class Project < ActiveRecord::Base
 
 		return release_readiness self, start_date, end_date
 	end
+
+	def is_metric_exist metric_id
+
+		self.rattributes.each do |r|
+
+			if r.metric.id == metric_id
+				return true
+			end
+		end
+
+		return false
+
+	end
 	
 end

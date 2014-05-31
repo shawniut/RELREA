@@ -13,7 +13,7 @@
  */
 
 #header{
-	width: 1200px;
+	width: 1100px;
 	height: 90px;
 	margin-left:auto;
   	margin-right: auto;
@@ -24,7 +24,7 @@
 
 
 #content{
-	width: 1200px;
+	width: 1100px;
 	margin-top: 20px;
 	margin-left:auto;
   	margin-right: auto;
@@ -32,9 +32,9 @@
 }
 
 #content-view{
-	width: 940px;
-	margin-left: 10px;
-	float: left;
+	width: 1100px;
+	margin-left:auto;
+	margin-right:auto;
 	
   	
 }

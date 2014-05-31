@@ -1,0 +1,26 @@
+<div class = "form">
+		<p align="right" ><%= submit_tag("Cancel", :onclick => "hideEditPanel(this)") %></p>
+	
+	<%= form_tag({controller: "/weights", action: "create", id:@project_id}, remote: "true", method: "POST") %>
+	<div>
+		<table class = "bordered">
+			<tr>
+				<th>Readiness attribute</th>
+				<th>Readiness Dimension</th>
+				<th>Relative Weight</th>
+			</tr>
+			<%@rattributes.each do |r| %>
+				<tr>
+					<td><%=r.metric.name %></td>
+					<td><%=r.metric.dimension %></td>
+					<td><input type="text", id = "<%=r.id%>", name = "<%=r.id%>" value = "<%=r.weight%>"></td>
+				</tr>
+			<%end%>
+
+		</table>
+
+		<p align="right"><%= submit_tag("Save Relative Weights") %></p>
+		<div id="weights"></div>
+	</div>
+	<div id="attributes"></div>
+</div>

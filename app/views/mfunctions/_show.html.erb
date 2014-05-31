@@ -1,0 +1,148 @@
+
+
+<div class="form">
+	<p align="right" ><%= submit_tag("Cancel", :onclick => "hideEditPanel(this)") %></p>
+	<%= form_tag({controller: "/mfunctions", action: "create", id:@Project.id}, remote: "true", method: "POST") %>
+	
+	<div id = "mf-div">
+		<p>Select Readiness Attributes:
+			<%=select_tag 'metrics_id', options_for_select(@Project.rattributes.collect{ |a| [a.metric.name, a.metric.id] })%>
+		</p>
+		<p>Selected function:</p>
+		<div id="selected-mf">
+		</div>
+		<div id="parameters">
+			<p>Prameters:</p>
+		</div>
+		<input type="hidden" id = "mf-parameters" name="mf-parameters" value= "0">
+		<input type="hidden" id = "mf-title" name="mf-title" value= "0">
+		<p align="middle">
+				<%= submit_tag("Save MF") %>
+		</p>
+		<div id="mf-created">
+		</div>
+
+	</div>
+
+	<div id = "shape-div">
+		<div id="shape1", class = "available-shape-div", onclick="selectMF()">
+		</div>
+		<div id="shape2", class = "available-shape-div">
+		</div>
+		<div id="shape3", class = "available-shape-div">
+		</div>
+		<div id="shape4", class = "available-shape-div">
+		</div>
+
+	</div>
+
+	
+</div>
+
+
+<script type="text/javascript">
+
+function createChart(container, series_data,mf_title){
+	document.getElementById("mf-title").value = mf_title;
+	chart = new Highcharts.Chart({
+		chart: {
+                renderTo: container,
+                events: {
+                click: function(event) {
+                    
+                    setChart("selected-mf", series_data,mf_title);
+                }
+            }  
+        },
+		title: {
+                text: mf_title,
+                x: -20 //center
+        },
+	    xAxis: {
+	       tickInterval:10,
+
+	    },
+	    
+	    yAxis: {
+	    	title: {
+                    text:"Degree of satisfaction"
+                },
+	        max: 1,
+	        min:0
+	    },
+
+	    series: [{
+	        data:series_data  
+	    }],
+
+	    legend: {
+            enabled:false    
+        },
+	});
+}
+
+
+$(function(){
+	var data1 = [[0,0],[0.1,0],[0.3,1],[0.4,1]] ;
+	createChart("shape1", data1,"Shape 1");
+
+	var data2 = [[0,1],[10,1],[30,0],[40,0]] ;
+	createChart("shape2", data2, "Shape 2");
+
+	var data3 = [[0,0],[10,0],[30,1],[40,1],[50,0],[60,0]] ;
+	createChart("shape3", data3,"Shape 3");
+
+	var data4 = [[0,0],[10,0],[30,1],[40,1],[50,0],[60,0]] ;
+	createChart("shape4", data4,"Shape 4");
+
+
+});
+
+function setChart(container, series_data,mf_title){
+
+	createChart("selected-mf", series_data,mf_title);
+
+	var names;
+	var values;
+	if(chart.options.title.text == "Shape 1" || chart.options.title.text == "Shape 2" )
+	{
+		names = ["p","q"];
+		values = [10,30];
+		document.getElementById("mf-parameters").value = "2";
+	}else if(chart.options.title.text == "Shape 3" || chart.options.title.text == "Shape 4" )
+	{
+		names = ["p","q","r","s"];
+		values = [10,30,40,50];
+		document.getElementById("mf-parameters").value = "4";
+	}
+
+	setParameterFields(values.length, values,names);
+
+}
+
+function setParameterFields(count, values, names){
+	var html="<p>Prameters:</p>";
+	var i=0;
+	for (i=0; i<count;i++)
+	{
+	 html+= '<p><label for="'+ names[i] +'">'+ names[i] +':</label> <input id="'+ names[i] +'" name="'+ i +'" oninput="changeParameter(this)" type="text" value="'+ values[i] +'"></p>';
+	}
+	document.getElementById("parameters").innerHTML=html;
+}
+
+function changeParameter(textInput) {
+		var value = textInput.value;
+		var index = parseInt(textInput.name);
+		
+
+		chart.series[0].data[index+1].update({
+            x: parseInt(value)
+        });
+
+        chart.series[0].data[chart.series[0].data.length-1].update({
+            x: (parseInt(value)+10)
+        });;
+		
+}
+    
+</script>

@@ -1,0 +1,37 @@
+<div class="form">
+	<p align="right" ><%= submit_tag("Cancel", :onclick => "hideEditPanel(this)") %></p>
+	
+	<%= form_tag({:controller => "data_service/datasources", :action=> "save", :id => '23'}, :method=>"POST", :remote=>"true")  %>
+		
+		<div>
+			<table class = "bordered">
+				<tr>
+					<th>Select</th>
+					<th>Readiness attribute</th>
+					<th>Readiness Dimension</th>
+					
+				</tr>
+				<%@Metrics.each do |m| %>
+
+					<tr>
+						<% if @Projects.is_metric_exist(m.id)%>
+							<td><input type="checkbox" checked  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>
+						<%else%>
+							<td><input type="checkbox"  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>
+						<%end%>
+						<td><%=m.name %></td>
+						<td><%=m.dimension %></td>
+					</tr>
+					
+				<%end%>
+
+			</table>
+
+			<p align="right"><%= submit_tag("Save Attributes") %></p>
+			<div id="attributes"></div>
+		</div>
+
+</div>
+
+
+
