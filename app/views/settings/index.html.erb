@@ -14,7 +14,9 @@
 			<p>Manage project info</p>
 		</div>
 		<div class="settings-edit">
-			<p>Edit</p>
+			<p><%=link_to "Edit",  {:controller => "infos", :action=> "index", :id => '23'}, :method=>"POST", :remote=>"true" %></p>
+		</div>
+		<div id= "project-info-panel">
 		</div>
 	</div>
 	<div class="individual-settings-container">

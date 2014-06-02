@@ -1,5 +1,7 @@
 RELREA::Application.routes.draw do
 
+  get "dashboard/index"
+  get "infos/index"
   get "manage_values/index"
   get "weights/index"
   get "mfunctions/index"
@@ -7,6 +9,12 @@ RELREA::Application.routes.draw do
   resources :home
   resources :test
   resources :charts
+  resources :infos do
+    member do
+        post 'index'
+        post 'save'
+    end
+  end
   resources :mfunctions do
     member do
         post 'show'

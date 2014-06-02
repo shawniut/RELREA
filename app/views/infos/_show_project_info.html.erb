@@ -1,0 +1,50 @@
+<div class = "form">
+	<p align="right" ><%= submit_tag("Cancel", :onclick => "hideEditPanel(this)") %></p>
+	<div>
+	<%= form_tag({controller: "infos", action: "save", id:@Project.id}, :remote => true, :method => 'POST') %>
+
+	<table >
+		
+		<tr>
+			<td align="right">
+				<%= label_tag(:release_date, "Next release date:") %>
+			</td>	
+			<td>
+				<% if @Project.info != nil %>
+					<%= date_field(:project, :release_date, :value=>@Project.info.next_release_date) %>
+				<%else%>
+					<%= date_field(:project, :release_date) %>
+				<%end%>
+			</tr>
+		</tr>
+		<tr>
+			<td align="right">
+				<%= label_tag(:start_date, "Project start date:") %>
+			</td>
+			<td>
+				<% if @Project.info != nil %>
+					<%= date_field(:project, :start_date, :value=>@Project.info.start_date) %>
+				<%else%>
+					<%= date_field(:project, :start_date) %>
+				<%end%>
+
+			</tr>
+		</tr>
+		<tr >
+			<td>
+				
+			</td>
+			<td align="left">
+				<p>
+					<%= submit_tag("Save Project Info") %>
+				</p>
+			</td>
+		</tr>
+		
+		</table>
+	
+	</div>
+	<div id="project_info">
+	</div>
+</div>
+

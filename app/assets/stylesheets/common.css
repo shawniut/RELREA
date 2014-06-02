@@ -21,6 +21,7 @@
 	padding: 15px;
 	position:relative;
 	overflow: hidden;
+	border:1px solid #D8D8D8;
 }
 
 .success{
