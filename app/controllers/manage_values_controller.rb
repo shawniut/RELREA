@@ -19,8 +19,8 @@ class ManageValuesController < ApplicationController
   	i=0
 
   	@rattributes.each do |r|
-
-  		r.value = (20+i)
+      random = Random.new
+  		r.value = random.rand(10..50).to_f
   		#@ary.push(get_git_metric_value 'publify', 'publify', @start_date, @end_date, r.metric.name);
   		i+=1
   	end
@@ -29,7 +29,7 @@ class ManageValuesController < ApplicationController
 			 	
 			format.html { render  :controller => "manage_values", :ation => 'index', :id => params[:id]}
 			format.js
-	end
+	   end
 
   end
 
@@ -40,11 +40,9 @@ class ManageValuesController < ApplicationController
 
   	rattributes.each do |r|
 
-  		value = Value.create(:mvalue=> params[r.id.to_s].to_f, :start_date => params["start_date"].to_date, 
+  		value = Value.new(:mvalue=> params[r.id.to_s].to_f, :start_date => params["start_date"].to_date, 
   			:end_date => params["end_date"].to_date)
-
-  		r.values << value
-  		r.save
+      r.save_value(value)
   	end
 
   	respond_to do |format|

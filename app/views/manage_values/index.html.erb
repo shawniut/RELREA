@@ -4,7 +4,7 @@
 	<%= form_tag({controller: "/manage_values", action: "new", id:@Project.id}, :remote => true, :method => 'POST') %>
 	<p>
 		<%= label_tag(:start_date, "From") %>
-		<%= date_field(:project, :start_date) %>
+		<%= date_field(:project, :start_date, :value => @Project.info.start_date) %>
 
 		<%= label_tag(:end_date, "to:") %>
 		<%= date_field(:project, :end_date) %>
@@ -14,5 +14,35 @@
 </div>
 <div id="values">
 </div>
+<h2>List of values</h2>
+
+			<%@Project.rattributes.each do |r| %>
+				<h3>
+				<%=r.metric.name + "-" %>
+				<%=r.metric.dimension %>
+				</h3>
+					<table class = "bordered">
+						<tr>
+							<th>From</th>
+							<th>To</th>
+							<th>Value</th>
+						</tr>
+						<%if r.values != nil%>
+							<%r.values.each do |v| %>
+							<tr>
+								
+								<td>	<%=v.start_date %> </td>
+									
+								<td>	<%=v.end_date %> </td>
+								<td>	<%=v.mvalue %> </td>
+								
+							</tr>
+
+							<%end%>
+						<%end%>	
+				</table>
+			<%end%>
+
+
 
 

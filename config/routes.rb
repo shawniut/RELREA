@@ -9,6 +9,13 @@ RELREA::Application.routes.draw do
   resources :home
   resources :test
   resources :charts
+ 
+  resources :dashboard do
+    member do
+        post 'show'
+        post 'save'
+    end
+  end
   resources :infos do
     member do
         post 'index'

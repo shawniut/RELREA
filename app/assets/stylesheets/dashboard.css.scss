@@ -1,3 +1,44 @@
 // Place all the styles related to the dashboard controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#d-left-panel{
+	float:left;
+	width:20%;
+	height: 800px;
+	//border-left:solid 1px green;
+}
+
+#d-container-panel{
+	float:left;
+	width:79.6%;
+	height: 800px;
+	border-bottom:solid 2px #D8D8D8;
+	border-left:solid 2px #D8D8D8;
+	border-right:solid 2px #D8D8D8;
+	//background-color: #FAFAFA;
+}
+
+#readiness-over-time{
+	float:left;
+	margin:10px;
+	padding: 10px;
+	margin-right:0px;
+	width: 95%;
+	height:250px;
+	border:solid 1px #D8D8D8	;
+	border-radius:5px;
+	background-color: #FAFAFA;
+
+}
+
+#attributes-satisfaction-lavel{
+	float:left;
+	margin: 10px;
+	width: 60%;
+	height:300px;
+	padding: 10px;
+	border:solid 1px #D8D8D8;
+	border-radius:5px;
+	background-color: #FAFAFA;
+}
