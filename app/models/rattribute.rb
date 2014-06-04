@@ -1,5 +1,6 @@
 class Rattribute < ActiveRecord::Base
 	include GitmetricHelper
+	include MembershipFunctionHelper
 
 	belongs_to :project, autosave:true
 	belongs_to :metric, :class_name => 'Dataservice::Metric'
@@ -11,11 +12,7 @@ class Rattribute < ActiveRecord::Base
 	  if  v != nil
 	    v.mvalue = value.mvalue
 	    v.save
-	    logger.debug "shawn"
-	    logger.debug v.mvalue
 	  else
-	  	logger.debug "shawn-create"
-	    logger.debug value.mvalue
 	    self.values << value
 	    self.save
 	    
@@ -29,6 +26,17 @@ class Rattribute < ActiveRecord::Base
 			end
 		end
 		return nil
+	end
+
+	def get_satisfaction_over_time
+		data = []
+		self.values.each do|v|
+			
+			satisfaction_level = get_satisfaction_degree self.mfunction.parameter, v.mvalue, self.mfunction.name
+			days = (v.end_date - v.start_date).to_i
+			data << [days, satisfaction_level.round(2)]
+		end
+		return data
 	end
 
 	

@@ -59,7 +59,7 @@ $(function () {
 	    tooltip: {
 	    	
 	    	shared: true,
-	        pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>'
+	        //pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>'
 	    },
 	    
 	    legend: {
@@ -71,7 +71,29 @@ $(function () {
 	        color: 'rgba(0, 0, 0, 1)',
 	        data: <%=@Project.get_satisfaction_level_by_date @days.to_i %>,
 	        pointPlacement: 'on'
-	    }]
+	    }],
+
+	    plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function (e) {
+
+                            	$.ajax({
+                            		type: "POST",
+                            		url: "/dashboard/"+<%=@Project.id%>+"/show_attributes_trend",
+                            		data: { index: e.point.x }
+                            	});
+                               
+                            }
+                        }
+                    },
+                    marker: {
+                        lineWidth: 1
+                    }
+                }
+            },
 	
 	});
 });

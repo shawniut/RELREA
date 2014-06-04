@@ -13,7 +13,7 @@ class WeightsController < ApplicationController
 
     respond_to do |format|
         
-      format.html { render  :controller => "settings", :ation => 'index', :id => params[:id]}
+      #format.html { render  :controller => "settings", :ation => 'index', :id => params[:id]}
       format.js
     end
   end
@@ -30,7 +30,7 @@ class WeightsController < ApplicationController
 
   	respond_to do |format|
 			 	
-			format.html { render  :controller => "weights", :ation => 'index', :id => params[:id]}
+			#format.html { render  :controller => "weights", :ation => 'index', :id => params[:id]}
 			format.js
 	end
 

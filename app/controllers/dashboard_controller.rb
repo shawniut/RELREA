@@ -1,6 +1,9 @@
 class DashboardController < ApplicationController
   def index
-  	@data2 = [[0,0],[0.1,0],[0.3,1],[0.4,1]]
+  	@Project = Project.find_by(:id=>params["id"])
+  	respond_to do |format|	 	
+			format.js	
+	end
   end
   
   def save
@@ -9,10 +12,17 @@ class DashboardController < ApplicationController
 
   	respond_to do |format|	 	
 			#format.html { render  :controller => "dashboard", :ation => 'index', :id => params[:id]}
-			format.js
-			
+			format.js	
 	end
+  end
 
+  def show_attributes_trend
+  	@Project = Project.find_by(:id=>params["id"])
+  	@index = params["index"].to_i
+  	respond_to do |format|	 	
+			#format.html { render  :controller => "dashboard", :ation => 'index', :id => params[:id]}
+			format.js	
+	end
   end
  
 end

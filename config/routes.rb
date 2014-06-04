@@ -1,5 +1,6 @@
 RELREA::Application.routes.draw do
 
+  get "project_home/index"
   get "dashboard/index"
   get "infos/index"
   get "manage_values/index"
@@ -9,11 +10,14 @@ RELREA::Application.routes.draw do
   resources :home
   resources :test
   resources :charts
+  resources :project_home
  
   resources :dashboard do
     member do
+        post 'index'
         post 'show'
         post 'save'
+        post 'show_attributes_trend'
     end
   end
   resources :infos do
@@ -34,9 +38,15 @@ RELREA::Application.routes.draw do
     end
   end
   
-  resources :settings
+  resources :settings do
+    member do
+      post 'index'
+    end
+  end
+
   resources :manage_values do
     member do
+
       post 'new'
     end
   end
