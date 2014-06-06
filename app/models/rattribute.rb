@@ -2,6 +2,8 @@ class Rattribute < ActiveRecord::Base
 	include GitmetricHelper
 	include MembershipFunctionHelper
 
+	attr_accessor :satisfaction_degree,:optimistic_weight,:pessimistic_weight
+
 	belongs_to :project, autosave:true
 	belongs_to :metric, :class_name => 'Dataservice::Metric'
 	belongs_to :mfunction, :class_name => 'Mfunction'

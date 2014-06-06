@@ -1,0 +1,25 @@
+
+<%# rattributes = @Project.get_attributes_with_owa_weights @Project.info.start_date, @Project.get_end_date @days %>
+<a align="center"><%= @series_name%>-Weight Distribution-(<%=@days%> th day)</a>
+<table class = "db-table">
+	<tr>
+		<th>Name</td>
+		<th>Sat. deg.</td>
+		<th>OWA-W</td>
+		<th>Rel-W</td>
+	</tr>
+	<% @rattributes.each do |r| %>
+		<tr>	
+			<td><%=r.metric.name%></td>
+			<td align="center"><%=r.satisfaction_degree.round(2)%></td>
+			<%if @series_name == "Optimistic"%>
+				<td align="center"><%=r.optimistic_weight%></td>
+			<%elsif @series_name == "Pessimistic"%>
+				<td align="center"><%=r.pessimistic_weight%></td>
+			<%else%>
+				<td align="center"><%=r.weight%></td>
+			<%end%>
+			<td align="center"><%=r.weight%></td>
+		</tr>
+	<% end %>
+</table>

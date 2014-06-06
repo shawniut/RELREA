@@ -1,11 +1,11 @@
 
-
-
 	<div class ="page-title">
 		<a class="title-text"><%=@Project.name%>::Dashboard</a>
 	</div>
 	<div id="readiness-over-time">
-	
+	</div>
+	<div id = "weight-distribution">
+		
 	</div>
 	<div id="attributes-satisfaction-lavel">
 	</div>
@@ -17,11 +17,12 @@
 <script type="text/javascript">
 
 $(function(){
-	createReadinessOverTimeChart("readiness-over-time", <%= get_data%>,"Readiness Over Time");
+	createReadinessOverTimeChart("readiness-over-time", <%= get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data%>,
+		<%=@optimistic_data%>,<%=@pessimistic_data%>,"Readiness Over Time");
 
 });
 
-function createReadinessOverTimeChart(container, series_data,mf_title){
+function createReadinessOverTimeChart(container, average_data,optimistic_data,pessimistic_data, mf_title){
 	
 	chart = new Highcharts.Chart({
 		chart: {
@@ -48,11 +49,18 @@ function createReadinessOverTimeChart(container, series_data,mf_title){
 	    },
 
 	    series: [{
-	        data:series_data  
+	    	name: 'Average',
+	        data:average_data  
+	    },{
+	    	name: 'Optimistic',
+	        data:optimistic_data  
+	    },{
+	    	name: 'Pessimistic',
+	        data:pessimistic_data  
 	    }],
 
 	    legend: {
-            enabled:false    
+            enabled:true    
         },
 
          plotOptions: {
@@ -65,9 +73,11 @@ function createReadinessOverTimeChart(container, series_data,mf_title){
                             	$.ajax({
                             		type: "POST",
                             		url: "/dashboard/"+<%=@Project.id%>+"/save",
-                            		data: { days: e.point.x }
+                            		data: { days: e.point.x,
+                            				series_name: this.series.name
+                            		 }
                             	});
-                               //alert("I am here"+ e.point.x+"-"+ e.point.y);
+                               //alert("I am here"+ this.series);
                             }
                         }
                     },

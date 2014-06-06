@@ -62,13 +62,15 @@
 	</div>
 	<div class="individual-settings-container">
 		<div class="settings-title">
-			<p>Decision Strategy</p>
+			<p>Past Releases</p>
 		</div>
 		<div class="settings-desc">
-			<p>Manage Decision Strategy</p>
+			<p>Manage Past Releases</p>
 		</div>
 		<div class="settings-edit">
-			<p>Edit</p>
+			<p><%=link_to "Edit",  {:controller => "releases", :action=> "index", :id =>  @Project.id}, :method=>"POST", :remote=>"true" %></p>
+		</div>
+		<div id= "releases-panel">
 		</div>
 	</div>
 

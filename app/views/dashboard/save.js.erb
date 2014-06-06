@@ -2,6 +2,8 @@
 
 $(function () {
 
+	$("#weight-distribution").html("<%= escape_javascript(render 'show_weights') %>");
+
 	$('#attributes-satisfaction-lavel').highcharts({
 	            
 	    chart: {

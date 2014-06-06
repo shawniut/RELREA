@@ -1,5 +1,6 @@
 RELREA::Application.routes.draw do
 
+  get "releases/index"
   get "project_home/index"
   get "dashboard/index"
   get "infos/index"
@@ -26,9 +27,16 @@ RELREA::Application.routes.draw do
         post 'save'
     end
   end
+  resources :releases do
+    member do
+        post 'index'
+        post 'save'
+    end
+  end
   resources :mfunctions do
     member do
         post 'show'
+        post 'show_mf'
     end
   end
   

@@ -98,6 +98,18 @@ module GitmetricHelper
   		return addition_deletion_count/(week_count*7).to_f
   	end
 
+    def get_releases repo, user
 
+      releases = []
+      releases_data = activity = Github.new.repos.releases.list user, repo
+
+      releases_data.each do |r|
+        release = Release.new
+        release.name = r.tag_name
+        release.date = r.published_at.to_date
+        releases << release
+      end
+      return releases
+    end
 	
 end

@@ -1,0 +1,26 @@
+<div class = "form">
+		<p align="right" ><%= submit_tag("Cancel", :onclick => "hideEditPanel(this)") %></p>
+	
+	<%= form_tag({controller: "/releases", action: "save", id:@Project.id}, remote: "true", method: "POST") %>
+	<div>
+		<table class = "bordered">
+			<tr>
+				<th>Release Tag</th>
+				<th>Release Date</th>
+			</tr>
+			<%i=0%>
+			<%@releases.each do |r| %>
+				<tr>
+					<td><input type="text", id = "<%=i%>", name = "<%=i%>_name" value = "<%=r.name%>"></td>
+					<td><input type="text", id = "<%=i%>", name = "<%=i%>" value = "<%=r.date%>"></td>
+				</tr>
+				<% i+=1%>
+			<%end%>
+
+		</table>
+		<input type="hidden" id = "release_count" name="release_count" value= "<%=i%>">
+		<p align="right"><%= submit_tag("Save Releases") %></p>
+		<div id="releases"></div>
+	</div>
+	<div id="release"></div>
+</div>

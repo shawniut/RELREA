@@ -16,6 +16,17 @@ class MfunctionsController < ApplicationController
 
   end
 
+  def show_mf
+    @Project = Project.find_by(id:params[:id])
+    mid = params[:metrics_id]
+    @mfunction = Project.find_by(id:params[:id]).rattributes.where(:metric_id =>mid)[0].mfunction
+
+    respond_to do |format|
+      format.js
+    end
+
+  end
+
   def create
 
   		@pid = params[:id]

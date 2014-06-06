@@ -3,31 +3,50 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 #mf-div{
-	float:left;
-	height:500px;
-	width: 48%;
-	border-right:1px solid red;
+	//float:left;
+	//height:500px;
+	width: 100%;
+	//border-right:1px solid red;
+	overflow: hidden;
 }
 
 #shape-div{
+	//float:left;
+	//height:500px;
+	width: 90%;
+	border-top:1px solid #D8D8D8;
+}
+
+.mf-title{
 	float:left;
-	height:500px;
-	width: 50%;
+	display: block; 
+	font: bold 14px Tahoma;
+	color: #1E75B3;
+	margin: 5px;
+	margin-bottom: 10px;
+	width:48%;
+	text-align: left;
 }
 #selected-mf{
-	
+	float:left;
+	width: 48%;
 	height:150px;
-	margin-left:50px;
+	margin-left:10px;
 	margin-right:10px;
-	width: 70%;
+	//width: 70%;
 	background-color: #D8D8D8;
 
+}
+
+#parameters{
+	float:left;
+	width: 48%;
 }
 
 .available-shape-div{
 	float:left;
 	width: 44%;
-	height: 45%;
+	height:150px;
 	margin:10px;
 	border:1px solid green;
 	background-color: #D8D8D8;

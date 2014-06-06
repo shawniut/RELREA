@@ -6,33 +6,39 @@
 	
 	<div id = "mf-div">
 		<p>Select Readiness Attributes:
-			<%=select_tag 'metrics_id', options_for_select(@Project.rattributes.collect{ |a| [a.metric.name, a.metric.id] })%>
+			<%=select_tag 'metrics_id', options_for_select(@Project.rattributes.collect{ |a| [a.metric.name, a.metric.id] }), {:onchange => "loadMF(this)", :include_blank => true } %>
 		</p>
-		<p>Selected function:</p>
+		<div class="mf-title">
+			Selected function:
+		</div>
+		<div class="mf-title">
+			Parameters:
+		</div>
 		<div id="selected-mf">
 		</div>
 		<div id="parameters">
-			<p>Prameters:</p>
 		</div>
 		<input type="hidden" id = "mf-parameters" name="mf-parameters" value= "0">
 		<input type="hidden" id = "mf-title" name="mf-title" value= "0">
-		<p align="middle">
-				<%= submit_tag("Save MF") %>
-		</p>
-		<div id="mf-created">
-		</div>
-
+		
 	</div>
-
+	<p align="middle">
+		<%= submit_tag("Save MF") %>
+	</p>
+	<div id="mf-created">
+	</div>
+	<p class= "mf-title">Select from Availabale Shapes:<p>
 	<div id = "shape-div">
-		<div id="shape1", class = "available-shape-div", onclick="selectMF()">
+		
+		<div id="shape1", class = "available-shape-div", onclick="selectMF(this)">
 		</div>
 		<div id="shape2", class = "available-shape-div">
 		</div>
-		<div id="shape3", class = "available-shape-div">
+		<!--<div id="shape3", class = "available-shape-div">
 		</div>
 		<div id="shape4", class = "available-shape-div">
 		</div>
+		-->
 
 	</div>
 
@@ -41,6 +47,22 @@
 
 
 <script type="text/javascript">
+
+function loadMF(select_box){
+
+	if(select_box.selectedIndex != 0)
+	{
+		$.ajax({
+            type: "POST",
+            url: "/mfunctions/"+<%=@Project.id%>+"/show_mf",
+            data: {metrics_id: select_box.options[select_box.selectedIndex].value }
+        });
+    }else{
+    	$("#selected-mf").html("");
+    	$("#parameters").html("");
+    	$('[name=commit]').prop('disabled', true);
+    }
+}
 
 function createChart(container, series_data,mf_title){
 	document.getElementById("mf-title").value = mf_title;
@@ -59,7 +81,7 @@ function createChart(container, series_data,mf_title){
                 x: -20 //center
         },
 	    xAxis: {
-	       tickInterval:10,
+	       //tickInterval:10,
 
 	    },
 	    
@@ -83,25 +105,25 @@ function createChart(container, series_data,mf_title){
 
 
 $(function(){
-	var data1 = [[0,0],[0.1,0],[0.3,1],[0.4,1]] ;
+	var data1 = [[0,0],[10,0],[30,1],[40,1]] ;
 	createChart("shape1", data1,"Shape 1");
 
 	var data2 = [[0,1],[10,1],[30,0],[40,0]] ;
 	createChart("shape2", data2, "Shape 2");
 
-	var data3 = [[0,0],[10,0],[30,1],[40,1],[50,0],[60,0]] ;
-	createChart("shape3", data3,"Shape 3");
+	// var data3 = [[0,0],[10,0],[30,1],[40,1],[50,0],[60,0]] ;
+	// createChart("shape3", data3,"Shape 3");
 
-	var data4 = [[0,0],[10,0],[30,1],[40,1],[50,0],[60,0]] ;
-	createChart("shape4", data4,"Shape 4");
+	// var data4 = [[0,0],[10,0],[30,1],[40,1],[50,0],[60,0]] ;
+	// createChart("shape4", data4,"Shape 4");
 
-
+	$('[name=commit]').prop('disabled', true);
 });
 
-function setChart(container, series_data,mf_title){
+function setChart(container, series_data, mf_title){
 
 	createChart("selected-mf", series_data,mf_title);
-
+	$('[name=commit]').prop('disabled', false);
 	var names;
 	var values;
 	if(chart.options.title.text == "Shape 1" || chart.options.title.text == "Shape 2" )
@@ -121,7 +143,7 @@ function setChart(container, series_data,mf_title){
 }
 
 function setParameterFields(count, values, names){
-	var html="<p>Prameters:</p>";
+	var html="";
 	var i=0;
 	for (i=0; i<count;i++)
 	{
@@ -131,17 +153,25 @@ function setParameterFields(count, values, names){
 }
 
 function changeParameter(textInput) {
-		var value = textInput.value;
+		var value = parseFloat(textInput.value);
 		var index = parseInt(textInput.name);
 		
-
 		chart.series[0].data[index+1].update({
-            x: parseInt(value)
+            x: value
         });
 
-        chart.series[0].data[chart.series[0].data.length-1].update({
-            x: (parseInt(value)+10)
-        });;
+        var last_x= parseFloat(chart.series[0].data[chart.series[0].data.length-2].x);
+		last_x += (last_x/chart.series[0].data.length);
+
+	    chart.series[0].data[chart.series[0].data.length-1].update({
+	            x: last_x
+	    });
+
+	    chart.xAxis[0].update({
+	    	max: last_x,
+	    	tickInterval: last_x/chart.series[0].data.length
+
+	    });
 		
 }
     

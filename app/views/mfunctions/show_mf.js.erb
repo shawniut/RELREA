@@ -1,0 +1,20 @@
+$(function(){
+
+	var names = <%= raw @mfunction.get_parameter_names%>;
+	var series_data = <%= raw @mfunction.get_parameter_as_array%>;
+	var values = <%= raw @mfunction.get_parameter_as_array_without_max_min%>;
+
+	var shape_name = "<%= @mfunction.name%>";
+
+	if(series_data.length > 0)
+	{
+		createChart("selected-mf", series_data,shape_name);
+		setParameterFields(values.length, values,names);
+		$('[name=commit]').prop('disabled', false);
+	}else{
+		$("#selected-mf").html("");
+    	$("#parameters").html("");
+    	$('[name=commit]').prop('disabled', true);
+	}
+
+});
