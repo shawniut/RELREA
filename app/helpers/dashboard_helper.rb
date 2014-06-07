@@ -7,8 +7,11 @@ module DashboardHelper
 
 	def get_all_series_data  project, average_data, optimistic_data, pessimistic_data
 
-		start_date = project.info.start_date
-		end_dates = Value.where(:rattribute_id=>project.rattributes[0].id).uniq.pluck(:end_date)
+		release = project.releases.where(:name=>'next')[0]
+		start_date = release.start_date
+		#logger.debug "Start date : #{start_date}"
+		end_dates = Value.where(:rattribute_id=>project.rattributes[0].id, :start_date=>start_date).uniq.pluck(:end_date)
+		#logger.debug "End date : #{end_dates}"
 		end_dates.each do |end_date|
 
 			rattributes = project.get_attributes_with_owa_weights start_date, end_date

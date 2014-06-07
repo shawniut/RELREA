@@ -1,5 +1,5 @@
 $(function(){
-    createAttributesTrendsChart("attributes-satisfaction-over-time", <%= @Project.rattributes[@index].get_satisfaction_over_time%>, "<%=@Project.rattributes[@index].metric.name%>");
+    createAttributesTrendsChart("attributes-satisfaction-over-time", <%= @Project.rattributes[@index].get_satisfaction_over_time @Project%>, "<%=@Project.rattributes[@index].metric.name%>");
 
 });
 

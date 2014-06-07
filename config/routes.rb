@@ -54,7 +54,9 @@ RELREA::Application.routes.draw do
 
   resources :manage_values do
     member do
-
+      post 'load_values'
+      post 'load_and_save_values'
+      post 'delete_values'
       post 'new'
     end
   end

@@ -20,6 +20,7 @@ class ReleasesController < ApplicationController
   		release = Release.new
   		release.name = params["#{i-1}_name"]
   		release.date = params["#{i-1}"]
+      release.start_date = params["#{i-1}_start_date"]
   		@Project.save_release release
   	end
 

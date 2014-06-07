@@ -30,9 +30,10 @@ class Rattribute < ActiveRecord::Base
 		return nil
 	end
 
-	def get_satisfaction_over_time
+	def get_satisfaction_over_time project
+		release = project.releases.where(:name=>'next')[0]
 		data = []
-		self.values.each do|v|
+		self.values.where(:start_date=>release.start_date).each do|v|
 			
 			satisfaction_level = get_satisfaction_degree self.mfunction.parameter, v.mvalue, self.mfunction.name
 			days = (v.end_date - v.start_date).to_i

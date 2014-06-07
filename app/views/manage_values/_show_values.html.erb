@@ -1,0 +1,32 @@
+<h2 class="title-text">Current list of values:</h2>
+
+			<%@Project.rattributes.each do |r| %>
+				<h3 class="title-text">
+				<%=r.metric.name + "-" %>
+				<%=r.metric.dimension %>
+				</h3>
+					<table class = "bordered">
+						<tr>
+							<th>From</th>
+							<th>To</th>
+							<th>Interval(days)</th>
+							<th>Value</th>
+							<th>Release</th>
+						</tr>
+						<%if r.values != nil%>
+
+							<%r.values.each do |v| %>
+							<tr>
+								
+								<td>	<%=v.start_date %> </td>	
+								<td>	<%=v.end_date %> </td>
+								<td>	<%=(v.end_date - v.start_date).to_i %> </td>
+								<td>	<%=v.mvalue %> </td>
+								<td>	<%=@releases.where(:start_date => v.start_date)[0].name %> </td>
+								
+							</tr>
+
+							<%end%>
+						<%end%>	
+				</table>
+			<%end%>

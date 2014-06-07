@@ -26,8 +26,11 @@ class Project < ActiveRecord::Base
 	end
 
 	def get_all_readiness_values
-		start_date = self.info.start_date
-		end_dates = Value.where(:rattribute_id=>self.rattributes[0].id).uniq.pluck(:end_date)
+		release = self.releases.where(:name=>'next')[0]
+		start_date = release.start_date
+		#logger.debug "Start date : #{start_date}"
+		end_dates = Value.where(:rattribute_id=>self.rattributes[0].id, :start_date=>start_date).uniq.pluck(:end_date)
+		#logger.debug "End date : #{end_dates}"
 		data = []
 		end_dates.each do |end_date|
 
@@ -47,8 +50,11 @@ class Project < ActiveRecord::Base
 	end
 
 	def get_end_date days
-		start_date = self.info.start_date
-		end_dates = Value.where(:rattribute_id=>self.rattributes[0].id).uniq.pluck(:end_date)
+		release = self.releases.where(:name=>'next')[0]
+		start_date = release.start_date
+		#logger.debug "Start date : #{start_date}"
+		end_dates = Value.where(:rattribute_id=>self.rattributes[0].id, :start_date=>start_date).uniq.pluck(:end_date)
+		#logger.debug "End date : #{end_dates}"
 		end_dates.each do |end_date|
 			if (end_date-start_date).to_i == days
 				return end_date
@@ -58,8 +64,11 @@ class Project < ActiveRecord::Base
 	end
 
 	def get_satisfaction_level_by_date days
-		start_date = self.info.start_date
+		release = self.releases.where(:name=>'next')[0]
+		start_date = release.start_date
+		logger.debug "Start date : #{start_date}"
 		specific_date = get_end_date days
+		logger.debug "Specific date : #{specific_date}"
 		data = []
 		
 		self.rattributes.each do |r|
@@ -80,7 +89,7 @@ class Project < ActiveRecord::Base
 	end
 
 	def get_release_info 
-		get_releases self.user, self.repo
+		get_releases self.user, self.repo, self
 	end
 
 	def save_release(release)
@@ -88,6 +97,7 @@ class Project < ActiveRecord::Base
 	  if  r != nil
 	    r.name = release.name
 	    r.date = release.date
+	    r.start_date = release.start_date
 	    r.save
 	  else
 	    self.releases << release

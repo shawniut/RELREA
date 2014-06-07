@@ -1,0 +1,48 @@
+
+
+<div class ="page-title">
+		<a class="title-text"><%=@Project.name%>::Manage Values</a>
+	</div>
+
+<div class = "form">
+	<div>
+	
+	<%= form_tag({controller: "/manage_values", action: "load_and_save_values", id:@Project.id}, :remote => true, :method => 'POST') %>
+	<p>Select Release:
+		<%=select_tag 'release_id', options_for_select(@Project.releases.reverse.collect{ |r| [r.name, r.id] }),{:onchange => "loadDates(this)"}%>
+		Select Attribute:
+		<%=select_tag 'metric_id', options_for_select(@Project.rattributes.collect{ |a| [a.metric.name, a.id] }), {:include_blank => true } %>
+	</p>
+	<p>
+		<%= label_tag(:start_date, "Load values from project Start Date") %>
+		<%= text_field(:project, :start_date, :value => @Project.releases.reverse[0].start_date, :readonly => true, :size=>15) %>
+
+		<%= label_tag(:today, "to end_date:") %>
+		<%= text_field(:project, :end_date,:value => Time.now.to_date, :readonly => true, :size=>15) %>
+		<%= label_tag(:interval, "with interval of:") %>
+		<%= text_field(:project,:interval, :size=>3, :value=>7) %> days
+		<%= submit_tag("Load Values") %>
+	</p>
+	</div>
+</div>
+<div id="values">
+</div>
+<div id="show-values">
+
+</div>
+
+
+
+<script type="text/javascript">
+
+	$("#show-values").html("<%= escape_javascript(render 'show_values') %>");
+
+	function loadDates(select_box){
+		var st_dates = <%= raw @Project.releases.reverse.map {|r| r.start_date.to_s}%> ;
+		var rl_dates = <%= raw  @Project.releases.reverse.map {|r| r.date.to_s}%>;
+	
+		document.getElementById("project_start_date").value = st_dates[select_box.selectedIndex];
+		document.getElementById("project_end_date").value = rl_dates[select_box.selectedIndex];
+	}
+
+</script>

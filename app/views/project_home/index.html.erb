@@ -3,6 +3,8 @@
 <script src="http://code.highcharts.com/modules/exporting.js"></script>
 
 
+
+
 <div id = "d-left-panel">
 	<div id = "vertmenu">
 	<h1><%=@Project.name%></h1>
@@ -20,6 +22,9 @@
 			</li>
 			<li>
 				<a href=""> What-if Scenario</a>
+			</li>
+			<li>
+				<%= link_to "Manage Values", { controller: "manage_values", action:"load_values", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
 			<li>
 				<%= link_to "Settings", { controller: "settings", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
