@@ -14,7 +14,7 @@
 				<%= link_to "Dashboard", { controller: "dashboard", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
 			<li>
-				<a href=""> Projected Readiness</a>
+				<%= link_to "Projected Readiness", { controller: "projected_readiness", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
 			<li >
 			<%#= image_tag('logo.png', :height => 25, :class => 'logo') %>

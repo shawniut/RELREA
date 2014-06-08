@@ -1,44 +1,39 @@
+<div class ="page-title">
+		<a class="title-text"><%=@Project.name%>::Projected Readiness</a>
+</div>
 
-	
-	<div class ="page-title">
-		<a class="title-text"><%=@Project.name%>::Dashboard</a>
-	</div>
-	<p class ="title-text" > Select Release:
-		<%=select_tag 'release_ids', options_for_select(@Project.releases.reverse.collect{ |r| [r.name, r.id] }),{:onchange => "loadDashboard(this)"}%>
-	</p>
-	<div id="readiness-over-time">
-	</div>
-	<div id = "weight-distribution">
-		
-	</div>
-	<div id="attributes-satisfaction-lavel">
-	</div>
-	<div id="attributes-satisfaction-over-time">
-	</div>
-	
+<div id="projected-readiness">
+
+
+
+</div>
 
 
 <script type="text/javascript">
 
-	$(function(){
 
-	document.getElementById("release_ids").selectedIndex = <%=@selected_index.to_i%>;
-});
 
 $(function(){
-	createReadinessOverTimeChart("readiness-over-time", <%= get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>,
-		<%=@optimistic_data%>,<%=@pessimistic_data%>,"Readiness Over Time");
+	<%get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>
+	var projected_series_avg = <%= get_projected_series @average_data, (@Project.info.next_release_date-@Release.start_date).to_i%>;
+	var projected_series_opt = <%= get_projected_series @optimistic_data, (@Project.info.next_release_date-@Release.start_date).to_i%>;
+	var projected_series_psi = <%= get_projected_series @pessimistic_data, (@Project.info.next_release_date-@Release.start_date).to_i%>;
+
+
+	createProjectedReadinessChart("projected-readiness","Projected Readiness", <%= @average_data %>,
+		<%=@optimistic_data%>,<%=@pessimistic_data%>, projected_series_avg,projected_series_opt,projected_series_psi);
 
 });
 
-function createReadinessOverTimeChart(container, average_data,optimistic_data,pessimistic_data, mf_title){
+function createProjectedReadinessChart(container, title, average_data,optimistic_data,pessimistic_data,projected_average_series_data,
+projected_optimistic_series_data,projected_pessimistic_series_data ){
 	
 	chart = new Highcharts.Chart({
 		chart: {
                 renderTo: container,
         },
 		title: {
-                text: mf_title,
+                text: title,
                 x: -20 //center
         },
 	    xAxis: {
@@ -66,6 +61,18 @@ function createReadinessOverTimeChart(container, average_data,optimistic_data,pe
 	    },{
 	    	name: 'Pessimistic',
 	        data:pessimistic_data  
+	    },{
+	    	name: 'Projected Average',
+	    	color: '#DF0101',
+	        data:projected_average_series_data  
+	    },{
+	    	name: 'Projected Optimistic',
+	    	color: '#DF0101',
+	        data:projected_optimistic_series_data  
+	    },{
+	    	name: 'Projected Pessimistic',
+	    	color: '#DF0101',
+	        data:projected_pessimistic_series_data  
 	    }],
 
 	    legend: {

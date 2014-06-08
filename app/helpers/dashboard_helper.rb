@@ -5,9 +5,7 @@ module DashboardHelper
 		Project.find_by(:id=>23).get_all_readiness_values
 	end
 
-	def get_all_series_data  project, average_data, optimistic_data, pessimistic_data
-
-		release = project.releases.where(:name=>'next')[0]
+	def get_all_series_data  project, average_data, optimistic_data, pessimistic_data, release
 		start_date = release.start_date
 		#logger.debug "Start date : #{start_date}"
 		end_dates = Value.where(:rattribute_id=>project.rattributes[0].id, :start_date=>start_date).uniq.pluck(:end_date)

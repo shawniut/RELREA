@@ -49,8 +49,7 @@ class Project < ActiveRecord::Base
 		return data
 	end
 
-	def get_end_date days
-		release = self.releases.where(:name=>'next')[0]
+	def get_end_date days, release
 		start_date = release.start_date
 		#logger.debug "Start date : #{start_date}"
 		end_dates = Value.where(:rattribute_id=>self.rattributes[0].id, :start_date=>start_date).uniq.pluck(:end_date)
@@ -63,11 +62,10 @@ class Project < ActiveRecord::Base
 		return nil
 	end
 
-	def get_satisfaction_level_by_date days
-		release = self.releases.where(:name=>'next')[0]
+	def get_satisfaction_level_by_date days,release
 		start_date = release.start_date
 		logger.debug "Start date : #{start_date}"
-		specific_date = get_end_date days
+		specific_date = get_end_date days, release
 		logger.debug "Specific date : #{specific_date}"
 		data = []
 		

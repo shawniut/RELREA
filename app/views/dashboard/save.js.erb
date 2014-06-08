@@ -71,7 +71,7 @@ $(function () {
 	    series: [{
 	        name: 'Satisfaction Level',
 	        color: 'rgba(0, 0, 0, 1)',
-	        data: <%=@Project.get_satisfaction_level_by_date @days.to_i %>,
+	        data: <%=@Project.get_satisfaction_level_by_date @days.to_i, @release %>,
 	        pointPlacement: 'on'
 	    }],
 
@@ -85,7 +85,11 @@ $(function () {
                             	$.ajax({
                             		type: "POST",
                             		url: "/dashboard/"+<%=@Project.id%>+"/show_attributes_trend",
-                            		data: { index: e.point.x }
+                            		data: {
+                            		 index: e.point.x, 
+                            		 release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value
+                            		}
+                            		
                             	});
                                
                             }

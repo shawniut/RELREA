@@ -30,8 +30,8 @@ class Rattribute < ActiveRecord::Base
 		return nil
 	end
 
-	def get_satisfaction_over_time project
-		release = project.releases.where(:name=>'next')[0]
+	def get_satisfaction_over_time project, release
+		
 		data = []
 		self.values.where(:start_date=>release.start_date).each do|v|
 			

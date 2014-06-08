@@ -8,7 +8,7 @@ class Mfunction < ActiveRecord::Base
 			data = [[0,0],[array[0].to_f,0],[array[1].to_f,1],[last_x,1]]
 		elsif name == "Shape 2"
 			last_x = array[1].to_f + (array[1].to_f/4)
-			data = [[0,1],[array[0].to_f,0],[array[1].to_f,1],[last_x,0]]
+			data = [[0,1],[array[0].to_f,1],[array[1].to_f,0],[last_x,0]]
 		end
 		return data
 	end
