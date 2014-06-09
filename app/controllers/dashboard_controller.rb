@@ -20,7 +20,7 @@ class DashboardController < ApplicationController
 	end
   end
   
-  def save
+  def load_satisfaction_by_day
   	@Project = Project.find_by(:id=>params["id"])
   	@days = params["days"].to_i
 

@@ -10,9 +10,6 @@
 
 
 <script type="text/javascript">
-
-
-
 $(function(){
 	<%get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>
 	var projected_series_avg = <%= get_projected_series @average_data, (@Project.info.next_release_date-@Release.start_date).to_i%>;

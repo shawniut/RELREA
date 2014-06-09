@@ -28,6 +28,27 @@
 
 }
 
+.green{
+	float:left;
+	width:60px;
+	height: 20px;
+	margin-top:15px;
+	margin-bottom:auto;
+	background-color:green;
+	border:1px solid #D8D8D8;
+}
+
+.red{
+	float:left;
+	width:60px;
+	height: 20px;
+	margin-top:15px;
+	margin-bottom:auto;
+	background-color:red;
+	border:1px solid #D8D8D8;
+
+}
+
 .settings-title{
 
 	width: 20%;
@@ -40,9 +61,15 @@
 
 .settings-desc{
 
-	width:66%;
+	width:56%;
 	float:left;
 	padding-left: 10px;
+}
+.status{
+
+	width:10%;
+	float:left;
+	text-align: center;
 }
 
 .settings-edit{

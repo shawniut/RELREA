@@ -12,6 +12,13 @@
 		<div class="settings-desc">
 			<p>Manage project info</p>
 		</div>
+		<div class="status">
+			<% if @Project.info != nil %>
+				<div class = "green"></div>
+			<%else%>
+				<div class = "red"></div>
+			<%end%>
+		</div>
 		<div class="settings-edit">
 			<p><%=link_to "Edit",  {:controller => "infos", :action=> "index", :id => @Project.id}, :method=>"POST", :remote=>"true" %></p>
 		</div>
@@ -25,6 +32,14 @@
 		</div>
 		<div class="settings-desc">
 			<p>Manage Readiness Attributes</p>
+		</div>
+		
+		<div class="status">
+			<% if @Project.rattributes.any? %>
+				<div class = "green"></div>
+			<%else%>
+				<div class = "red"></div>
+			<%end%>
 		</div>
 		<div class="settings-edit">
 			<p><%=link_to "Edit",  {:controller => "data_service/datasources", :action=> "show", :id =>  @Project.id}, :method=>"POST", :remote=>"true" %></p>
@@ -41,6 +56,13 @@
 		<div class="settings-desc">
 			<p>Manage Membership Function</p>
 		</div>
+		<div class="status">
+			<% if (has_mf @Project) == true %>
+				<div class = "green"></div>
+			<%else%>
+				<div class = "red"></div>
+			<%end%>
+		</div>
 		<div class="settings-edit">
 			<p><%=link_to "Edit",  {:controller => "mfunctions", :action=> "show", :id =>  @Project.id}, :method=>"POST", :remote=>"true" %></p>
 		</div>
@@ -54,6 +76,14 @@
 		<div class="settings-desc">
 			<p>Manage Relative Weights</p>
 		</div>
+		<div class="status">
+			<% if (has_weights @Project) == true %>
+				<div class = "green"></div>
+			<%else%>
+				<div class = "red"></div>
+			<%end%>
+		</div>
+		
 		<div class="settings-edit">
 			<p><%=link_to "Edit",  {:controller => "weights", :action=> "show", :id =>  @Project.id}, :method=>"POST", :remote=>"true" %></p>
 		</div>
@@ -66,6 +96,13 @@
 		</div>
 		<div class="settings-desc">
 			<p>Manage Past Releases</p>
+		</div>
+		<div class="status">
+			<% if @Project.releases.any?%>
+				<div class = "green"></div>
+			<%else%>
+				<div class = "red"></div>
+			<%end%>
 		</div>
 		<div class="settings-edit">
 			<p><%=link_to "Edit",  {:controller => "releases", :action=> "index", :id =>  @Project.id}, :method=>"POST", :remote=>"true" %></p>

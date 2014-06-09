@@ -1,7 +1,7 @@
 <div class="form">
 	<p align="right" ><%= submit_tag("Cancel", :onclick => "hideEditPanel(this)") %></p>
 	
-	<%= form_tag({:controller => "data_service/datasources", :action=> "save", :id => '23'}, :method=>"POST", :remote=>"true")  %>
+	<%= form_tag({:controller => "data_service/datasources", :action=> "save", :id => @Project.id}, :method=>"POST", :remote=>"true")  %>
 		
 		<div>
 			<table class = "bordered">
@@ -14,7 +14,7 @@
 				<%@Metrics.each do |m| %>
 
 					<tr>
-						<% if @Projects.is_metric_exist(m.id)%>
+						<% if @Project.is_metric_exist(m.id)%>
 							<td><input type="checkbox" checked  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>
 						<%else%>
 							<td><input type="checkbox"  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>

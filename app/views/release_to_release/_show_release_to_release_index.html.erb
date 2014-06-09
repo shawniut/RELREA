@@ -1,0 +1,97 @@
+<div class ="page-title">
+		<a class="title-text"><%=@Project.name%>::Release to Release </a>
+</div>
+<div id = "release-to-release">
+	
+</div>
+<div id = "load_satisfaction_by_day">
+	
+</div>
+
+<script type="text/javascript">
+$(function(){
+
+	createReleaseToReleaseReadinessChart("release-to-release", "Readiness Compared to Previous Releases");
+
+	<%@Project.releases.each do |r| %>
+		<%if (r.has_value @Project.rattributes) == true %>
+
+			chart.addSeries({
+            	name: "<%= r.name%>",
+            	data: <%=get_all_series_data_average  @Project,r%>
+        	});
+
+		<%end%>
+	<%end%>
+});
+
+function createReleaseToReleaseReadinessChart(container, title ){
+	
+	chart = new Highcharts.Chart({
+		chart: {
+                renderTo: container,
+        },
+		title: {
+                text: title,
+                x: -20 //center
+        },
+	    xAxis: {
+	    	title: {
+                    text:"Development Time (days)"
+                },
+	       tickInterval:7,
+
+	    },
+	    
+	    yAxis: {
+	    	title: {
+                    text:"Readiness"
+                },
+	        max: 1,
+	        min:0
+	    },
+
+	    series: [],
+
+	    legend: {
+            enabled:true    
+        },
+
+         plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function (e) {
+
+                            	$.ajax({
+                            		type: "POST",
+                            		url: "/release_to_release/"+<%=@Project.id%>+"/load_satisfaction_by_day",
+                            		data: { days: e.point.x,
+                            				series_name: this.series.name
+                            		 }
+                            	});
+                               //alert("I am here"+ this.series);
+                            }
+                        }
+                    },
+                    marker: {
+                        lineWidth: 1
+                    }
+                }
+            },
+	});
+}
+
+function loadDashboard(release_ids){
+	$.ajax({
+            type: "POST",
+            url: "/dashboard/"+<%=@Project.id%>+"/index",
+            data: { 
+                    release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value,
+                    selected_index : document.getElementById("release_ids").selectedIndex
+            }
+    });
+}
+
+</script>

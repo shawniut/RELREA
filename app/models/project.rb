@@ -63,6 +63,7 @@ class Project < ActiveRecord::Base
 	end
 
 	def get_satisfaction_level_by_date days,release
+		
 		start_date = release.start_date
 		logger.debug "Start date : #{start_date}"
 		specific_date = get_end_date days, release
@@ -72,7 +73,7 @@ class Project < ActiveRecord::Base
 		self.rattributes.each do |r|
 			metric_value = Value.where(:rattribute_id=>r.id, :start_date=>start_date, :end_date=>specific_date)[0].mvalue
 			satisfaction_level = get_satisfaction_degree r.mfunction.parameter, metric_value, r.mfunction.name
-			data << satisfaction_level.to_f
+			data << satisfaction_level.to_f.round(2	)
 		end
 		return data.to_json
 	end

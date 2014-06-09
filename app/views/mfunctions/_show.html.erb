@@ -1,7 +1,7 @@
 
 
 <div class="form">
-	<p align="right" ><%= submit_tag("Cancel", :onclick => "hideEditPanel(this)") %></p>
+	<p align="right" ><%= submit_tag("Cancel",:name => "cancel", :onclick => "hideEditPanel(this)") %></p>
 	<%= form_tag({controller: "/mfunctions", action: "create", id:@Project.id}, remote: "true", method: "POST") %>
 	
 	<div id = "mf-div">

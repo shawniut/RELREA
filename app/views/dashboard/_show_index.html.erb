@@ -8,13 +8,19 @@
 	</p>
 	<div id="readiness-over-time">
 	</div>
-	<div id = "weight-distribution">
-		
+	<div id="readiness-scores">
+		<p id = "cr-text">CR:</p>
+		<p id = "pr-text">PR:</p>
 	</div>
-	<div id="attributes-satisfaction-lavel">
+	<div id = "attributes-satisfaction-level-container">
+		<div id="attributes-satisfaction-lavel">
+		</div>
+		<div id="attributes-satisfaction-over-time">
+		</div>
 	</div>
-	<div id="attributes-satisfaction-over-time">
+	<div id = "weight-distribution">	
 	</div>
+	
 	
 
 
@@ -26,9 +32,16 @@
 });
 
 $(function(){
-	createReadinessOverTimeChart("readiness-over-time", <%= get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>,
-		<%=@optimistic_data%>,<%=@pessimistic_data%>,"Readiness Over Time");
 
+		createReadinessOverTimeChart("readiness-over-time", <%= get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>,
+			<%=@optimistic_data%>,<%=@pessimistic_data%>,"Readiness Over Time");
+		<% if @Release.name == 'next'%>
+			$("#cr-text").html("CR: <%=@average_data[@average_data.length-1][1]%>");
+			$("#pr-text").html("PR: <%= (get_projected_series @average_data, (@Project.info.next_release_date-@Release.start_date).to_i)[1][1] %>");
+		<%else%>
+			$("#cr-text").html("CR: <%=@average_data[@average_data.length-1][1]%>");
+			$("#pr-text").html("PR: N/A");
+		<%end%>
 });
 
 function createReadinessOverTimeChart(container, average_data,optimistic_data,pessimistic_data, mf_title){
@@ -81,7 +94,7 @@ function createReadinessOverTimeChart(container, average_data,optimistic_data,pe
 
                             	$.ajax({
                             		type: "POST",
-                            		url: "/dashboard/"+<%=@Project.id%>+"/save",
+                            		url: "/dashboard/"+<%=@Project.id%>+"/load_satisfaction_by_day",
                             		data: { days: e.point.x,
                             				series_name: this.series.name,
                             				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value

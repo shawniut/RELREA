@@ -7,8 +7,8 @@ class ProjectedReadinessController < ApplicationController
 
    		@Release =  @Project.releases.where(:name=>'next')[0]
 
-  	respond_to do |format|	 	
+  		respond_to do |format|	 	
 			format.js	
-	end
+		end
   end
 end

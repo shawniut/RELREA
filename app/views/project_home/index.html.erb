@@ -18,7 +18,7 @@
 			</li>
 			<li >
 			<%#= image_tag('logo.png', :height => 25, :class => 'logo') %>
-				<a href=""> Release-to-Release Comparison</a>
+				<%= link_to "Release to Release Comparison", { controller: "release_to_release", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
 			<li>
 				<a href=""> What-if Scenario</a>

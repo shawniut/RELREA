@@ -1,17 +1,28 @@
 
 <%# rattributes = @Project.get_attributes_with_owa_weights @Project.info.start_date, @Project.get_end_date @days %>
-<a align="center"><%= @series_name%>-Weight Distribution-(<%=@days%> th day)</a>
+<a class = "d-title-text"><%= @series_name%>-Weight Distribution-(day = <%=@days%>)</a>
 <table class = "db-table">
 	<tr>
+		<th></th>
 		<th>Name</td>
-		<th>Sat. deg.</td>
 		<th>OWA-W</td>
+		<th>Sat. deg.</td>
 		<th>Rel-W</td>
 	</tr>
+	<%colors=get_color_shade @rattributes.length%>
+	<%n=0%>
+	<%if @series_name == "Pessimistic"%>
+		<%#@rattributes = @rattributes.sort!{|r1,r2| r2.pessimistic_weight <=> r1.pessimistic_weight}%>
+		<%colors = colors.reverse%>
+	<%elsif @series_name == "Average"%>
+		<%colors=get_green_color @rattributes.length%>
+	<%end%>
 	<% @rattributes.each do |r| %>
-		<tr>	
+		<tr >	
+			
+			<td style="background-color:rgb(<%=colors[n][0]%>,<%=colors[n][1]%>,<%=colors[n][2]%>")><div style="width:20px"></div></td>
+			<%n += 1%>
 			<td><%=r.metric.name%></td>
-			<td align="center"><%=r.satisfaction_degree.round(2)%></td>
 			<%if @series_name == "Optimistic"%>
 				<td align="center"><%=r.optimistic_weight%></td>
 			<%elsif @series_name == "Pessimistic"%>
@@ -19,6 +30,7 @@
 			<%else%>
 				<td align="center"><%=r.weight%></td>
 			<%end%>
+			<td align="center"><%=r.satisfaction_degree.round(2)%></td>
 			<td align="center"><%=r.weight%></td>
 		</tr>
 	<% end %>

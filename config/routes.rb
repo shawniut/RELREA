@@ -1,5 +1,6 @@
 RELREA::Application.routes.draw do
 
+  get "release_to_release/index"
   get "projected_readiness/index"
   get "releases/index"
   get "project_home/index"
@@ -18,8 +19,14 @@ RELREA::Application.routes.draw do
     member do
         post 'index'
         post 'show'
-        post 'save'
+        post 'load_satisfaction_by_day'
         post 'show_attributes_trend'
+    end
+  end
+  resources :release_to_release do
+    member do
+        post 'index'
+        post 'load_satisfaction_by_day'
     end
   end
   resources :projected_readiness do

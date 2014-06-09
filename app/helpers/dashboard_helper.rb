@@ -27,6 +27,26 @@ module DashboardHelper
 
 	end
 
+	def get_all_series_data_average  project,release
+		average_data = []
+		start_date = release.start_date
+		#logger.debug "Start date : #{start_date}"
+		end_dates = Value.where(:rattribute_id=>project.rattributes[0].id, :start_date=>start_date).uniq.pluck(:end_date)
+		#logger.debug "End date : #{end_dates}"
+		end_dates.each do |end_date|
+
+			rattributes = project.get_attributes_with_owa_weights start_date, end_date
+			
+			average_radiness = get_average_readiness rattributes
+			days = (end_date-start_date).to_i
+			
+			average_data << [days, average_radiness.round(2)]
+			
+		end
+		return average_data.to_json
+
+	end
+
 	def get_pessimistic_series_data project
 
 	end
@@ -53,6 +73,33 @@ module DashboardHelper
 			readiness += (r.satisfaction_degree*r.weight)
 		end
 		return readiness
+	end
+
+	def get_color_shade n
+
+			step_size = 196/n
+			red = 0
+			green = 200
+			
+			output = []	
+
+			(1..n).each do |i|
+			    red += step_size;
+			    output << [red, green, 47]  
+			end
+			return output
+	end
+
+	def get_green_color n
+			red = 0
+			green = 200
+			
+			output = []	
+
+			(1..n).each do |i|
+			    output << [red, green, 47]  
+			end
+			return output
 	end
 
 

@@ -13,12 +13,12 @@ class DataService::DatasourcesController < ApplicationController
 
 	def show
 
-		@Projects = Project.find_by(:id=> params["id"])
+		@Project = Project.find_by(:id=> params["id"])
 
 		@Metrics = Dataservice::Metric.all
 			respond_to do |format|
 			 	
-			 	format.html { render :action => "index" }
+			 	#format.html { render :action => "index" }
 			 	format.js
 		end
 	end
