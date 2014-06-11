@@ -22,6 +22,10 @@ module DashboardHelper
 			average_data << [days, average_radiness.round(2)]
 			optimistic_data << [days, optimistic_radiness.round(2)]
 			pessimistic_data << [days, pessimistic_radiness.round(2)]
+
+			average_data.sort_by{|x,y| x }
+			optimistic_data.sort_by{|x,y| x }
+			pessimistic_data.sort_by{|x,y| x }
 		end
 		return average_data.to_json
 
