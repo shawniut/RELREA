@@ -4,10 +4,10 @@ class Project < ActiveRecord::Base
 	include MembershipFunctionHelper
 	include GitmetricHelper
 
-	has_many :rattributes,   autosave: true
-	has_many :releases,   autosave: true
-	has_one :info, :class_name => 'Info'
-	accepts_nested_attributes_for :rattributes,  :allow_destroy => true 
+	has_many :rattributes,   autosave: true, :dependent => :destroy
+	has_many :releases,   autosave: true, :dependent => :destroy
+	has_one :info, :class_name => 'Info', :dependent => :destroy
+	validates_presence_of :name, :repo, :user
 
 	def get_attributes_with_owa_weights start_date, end_date
 		rattributes = self.rattributes
@@ -85,6 +85,18 @@ class Project < ActiveRecord::Base
 			end
 		end
 		return false
+	end
+
+	def raw_files_downloaded?
+
+		self.rattributes.each do |r|
+
+			if(r.raw_file != nil)
+				return true
+			end
+		end
+		return false
+
 	end
 
 	def get_release_info 

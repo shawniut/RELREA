@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rattribute_id: MyString
+  file: MyString
+  source: MyString
+
+two:
+  rattribute_id: MyString
+  file: MyString
+  source: MyString

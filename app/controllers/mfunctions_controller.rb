@@ -19,7 +19,10 @@ class MfunctionsController < ApplicationController
   def show_mf
     @Project = Project.find_by(id:params[:id])
     mid = params[:metrics_id]
-    @mfunction = Project.find_by(id:params[:id]).rattributes.where(:metric_id =>mid)[0].mfunction
+    rattributes = Project.find_by(id:params[:id]).rattributes
+    @ra = rattributes.where(:metric_id =>mid)[0]
+    @mfunction = @ra.mfunction
+
 
     respond_to do |format|
       format.js
@@ -54,5 +57,13 @@ class MfunctionsController < ApplicationController
 			format.html { render  :controller => "mfunctions", :ation => 'index', :id => params[:id], :notice => message}
 			format.js
 		end
+  end
+
+  def see_past_data
+    
+    
+    respond_to do |format|
+      format.js
+    end
   end
 end

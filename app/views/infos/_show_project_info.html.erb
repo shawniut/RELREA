@@ -36,11 +36,9 @@
 				<%= label_tag(:repo, "Repo:") %>
 			</td>
 			<td>
-				<% if @Project.info != nil %>
+				
 					<%= text_field(:project, :repo, :value=>@Project.repo) %>
-				<%else%>
-					<%= text_field(:project, :repo) %>
-				<%end%>
+				
 			</td>
 
 		</tr>
@@ -51,11 +49,9 @@
 				<%= label_tag(:user, "User:") %>
 			</td>
 			<td>
-				<% if @Project.info != nil %>
+				
 					<%= text_field(:project, :user, :value=>@Project.user) %>
-				<%else%>
-					<%= text_field(:project, :user) %>
-				<%end%>
+				
 			</td>
 		</tr>
 		

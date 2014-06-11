@@ -1,0 +1,34 @@
+<div class = "form">
+		<p align="right" ><%= submit_tag("Cancel", :onclick => "hideEditPanel(this)") %></p>
+	
+	<%= form_tag({controller: "/raw_files", action: "download_save_files", id:@Project.id}, remote: "true", method: "POST") %>
+	<div>
+		<table class = "bordered">
+			<tr>
+				<th>Readiness attribute</th>
+				<th>Readiness Dimension</th>
+				<th>Source</th>
+				<th>Labels</th>
+				<th>Status</th>
+			</tr>
+			<%@Project.rattributes.each do |r| %>
+				<tr>
+					<td><%=r.metric.name %></td>
+					<td><%=r.metric.dimension %></td>
+					<td><%=r.metric.source %></td>
+					<td><%=r.label %></td>
+					<%if r.raw_file != nil %>
+						<td>Downloaded</td>
+					<%else%>
+						<td>-</td>
+					<%end%>
+				</tr>
+			<%end%>
+
+		</table>
+
+		<p align="right"><%= submit_tag("Download and Save Files") %></p>
+		<div id="weights"></div>
+	</div>
+	<div id="download-save-files"></div>
+</div>

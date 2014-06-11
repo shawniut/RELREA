@@ -1,0 +1,84 @@
+<div class ="page-title">
+		<a class="title-text">Create a new project</a>
+</div>
+<div class ="form">
+		<%= form_tag({controller: "projects", action: "create"}, method: "POST") %>
+			<table style="width:350px">
+				<tr>
+					<td style="width:50px">
+						<%= label_tag(:name, "Project name:") %> 
+					</td>
+					<td  style="width:40px">
+						<%= text_field(:name, :name) %> <br>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:110px">
+						<%= label_tag(:repo_name, "Repository name:") %> 
+					</td>
+					<td style="width:40px">
+						<%= text_field(:repo_name, :name) %> <br>
+					</td>
+				</tr>
+				<tr>
+					<td style="width:110px">
+						<%= label_tag(:user_name, "User name:") %> 
+					</td>	
+					<td>
+						<%= text_field(:user_name, :name) %> <br>
+					</tr>
+				</tr>
+				
+				</table>
+		<p>
+			<%= submit_tag("Create New Project") %>
+		</p>
+
+		<% if @Project != nil and @Project.errors.any? %>
+		    <div class="error_explanation">
+		      <h2><%= pluralize(@Project.errors.count, "error") %> prohibited this project being saved:</h2>
+
+		      <ul>
+		      <% @Project.errors.full_messages.each do |msg| %>
+		        <li><%= msg %></li>
+		      <% end %>
+		      </ul>
+		    </div>
+  		<% end %>
+
+  	<% if flash[:notice] %>
+  		<div class = "success_message ">
+	         <h2><%=flash[:notice] %></h2>
+	     </div>
+  	<% end%>
+
+</div>
+
+<div class ="page-title">
+		<a class="title-text">All projects</a>
+</div>
+
+<div id = "settings-container">
+	<%Project.all.each do |p|%>
+		<div class="individual-settings-container">
+			<div class="settings-title">
+				<p><%=p.name%></p>
+			</div>
+			<div class="settings-desc">
+				<p>User: <%=p.user%>, Repo: <%=p.repo%></p>
+			</div>
+			<div class="status">
+				<% if (is_project_ok? p) == true %>
+					<div class = "green"></div>
+				<%else%>
+					<div class = "red"></div>
+				<%end%>
+			</div>
+			<div class="settings-edit">
+				<p><%=link_to "Dashboard",  {:controller => "project_home", :action=> "index", :id => p.id} %></p>
+			</div>
+			<div id= "project-info-panel">
+			</div>
+		</div>
+	<%end%>
+</div>

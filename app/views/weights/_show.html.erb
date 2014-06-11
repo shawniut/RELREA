@@ -8,12 +8,14 @@
 				<th>Readiness attribute</th>
 				<th>Readiness Dimension</th>
 				<th>Relative Weight</th>
+				<th>Issue Label</th>
 			</tr>
 			<%@rattributes.each do |r| %>
 				<tr>
 					<td><%=r.metric.name %></td>
 					<td><%=r.metric.dimension %></td>
 					<td><input type="text", id = "<%=r.id%>", name = "<%=r.id%>" value = "<%=r.weight%>"></td>
+					<td><input type="text", id = "<%=r.id%>_label", name = "<%=r.id%>_label" value = "<%=r.label%>"></td>
 				</tr>
 			<%end%>
 

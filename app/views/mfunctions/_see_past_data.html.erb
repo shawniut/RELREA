@@ -1,0 +1,26 @@
+
+<%data = get_past_release_data @ra, @Project.releases %>
+<% if data.any? == true %>
+	<div id = "past-data">
+		
+		<table class="bordered">
+			<tr>
+				<th>Past Releases</th>
+				<th>Duration</th>
+				<th>Min</th>
+				<th>Max</th>
+			</tr>
+
+			<% data.each do |d|%>
+				<tr>
+					<td><%=d[0]%></td>
+					<td><%=d[1]%></td>
+					<td><%=d[2]%></td>
+					<td><%=d[3]%></td>
+				</tr>
+
+			<%end%>
+			
+		</table>
+	</div>
+<%end%>

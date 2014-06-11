@@ -1,6 +1,7 @@
 module GitmetricHelper 
 	require 'open-uri'
   require 'json'
+  require 'hashie'
 
 	def index
   		start_date = Date.strptime('01-05-2013', '%d-%m-%Y')
@@ -17,80 +18,99 @@ module GitmetricHelper
 
   	end
 
-    def get_git_metric_value repo, user, start_date, end_date, metric_name
+    def get_git_metric_value repo, user, start_date, end_date, rattribute
 
-      if metric_name == "Feature completion rate"
-        return feature_completion_ratio repo, user, start_date, end_date,'feature'
-       elsif metric_name == "Features Implemented"
-         return feature_implemented repo, user, start_date, end_date
+      if rattribute.metric.name == "Feature completion rate"
+        return feature_completion_ratio repo, user, start_date, end_date,rattribute.label, rattribute.raw_file.file
 
-      elsif metric_name == "Code churn rate"
-        return code_churn repo, user, end_date, 5
+       elsif rattribute.metric.name == "Features Implemented"
+         return feature_implemented repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
 
-      elsif metric_name == "Defect find rate"
-        return defect_find_rate repo, user, start_date, end_date,'bug'
+      elsif rattribute.metric.name == "Code churn rate"
+        return code_churn repo, user, end_date, 5, rattribute.raw_file.file
 
-       elsif metric_name == "Bug fix rate"
-        return bug_fix_rate repo, user, start_date, end_date,'bug'
+      elsif rattribute.metric.name == "Defect find rate"
+        return defect_find_rate repo, user, start_date, end_date,rattribute.label,rattribute.raw_file.file
+
+       elsif rattribute.metric.name == "Bug fix rate"
+        return bug_fix_rate repo, user, start_date, end_date,rattribute.label,rattribute.raw_file.file
        
-       elsif metric_name == "Pull-request Completion Rate"
-        return get_pull_request_completion_rate repo, user, start_date, end_date
+       elsif rattribute.metric.name == "Pull-request Completion Rate"
+        return get_pull_request_completion_rate repo, user, start_date, end_date, rattribute.raw_file.file
     
       end
 
     end 
 
 
-  	def defect_find_rate repo, user, start_date, end_date, label
-  		search = Github::Search.new 
-  		var = search.issues q: 'repo:' + user + '/' + repo +' label:'+label+' created:'+start_date.to_s+'..'+end_date.to_s
-
+  	def defect_find_rate repo, user, start_date, end_date, label, issues
   		days = (end_date-start_date).to_i
-  		dfr = (var.total_count.to_f/days.to_f)
+
+      total_count = 0
+     
+      issues["items"].each do |i|
+       created_at = i["created_at"].to_date
+        if created_at >=start_date and created_at <= end_date
+           total_count+=1
+        end
+      end
+
+  		dfr = (total_count.to_f/days.to_f)
   		
   		return dfr.round(2)
 
   	end
 
-  	def bug_fix_rate repo, user, start_date, end_date,label
-  		search = Github::Search.new 
-  		var = search.issues q: 'repo:' + user + '/' + repo +' label:'+label+' state:closed created:'+start_date.to_s+'..'+end_date.to_s
+  	def bug_fix_rate repo, user, start_date, end_date,label,issues
+       total_count = 0
+       issues["items"].each do |i|
+         updated_at = i["updated_at"].to_date
+        if updated_at >=start_date and updated_at <= end_date and i["state"]=="closed"
+           total_count+=1
+        end
+      end
 
   		days = (end_date-start_date).to_i
-  		bfr = (var.total_count.to_f/days.to_f)
+  		bfr = (total_count.to_f/days.to_f)
   		
   		return bfr.round(2)
 
   	end
 
 
-  	def feature_completion_ratio repo, user, start_date, end_date,label
-  		search = Github::Search.new 
-  		var = search.issues q: 'repo:' + user + '/' + repo +' label:'+label+' state:closed updated:'+start_date.to_s+'..'+end_date.to_s
+  	def feature_completion_ratio repo, user, start_date, end_date,label, issues
+  		 total_count = 0
+       issues["items"].each do |i|
+         updated_at = i["updated_at"].to_date
+        if updated_at >=start_date and updated_at <= end_date and i["state"]=="closed"
+           total_count+=1
+        end
+      end
 
   		days = (end_date-start_date).to_i
-  		fcr = (var.total_count.to_f/days.to_f)
+  		fcr = (total_count.to_f/days.to_f)
   		
   		return fcr.round(2)
 
   	end
 
-  	def feature_implemented repo, user, start_date, end_date
-  		search = Github::Search.new 
-  		var = search.issues q: 'repo:' + user + '/' + repo +' label:feature state:closed updated:'+start_date.to_s+'..'+end_date.to_s
+  	def feature_implemented repo, user, start_date, end_date, label, issues
+  		total_count = 0
+       issues["items"].each do |i|
+         updated_at = i["updated_at"].to_date
+        if updated_at >=start_date and updated_at <= end_date and i["state"]=="closed"
+           total_count+=1
+        end
+      end
   		
-  		return var.total_count.to_f
+  		return total_count.to_f
 
   	end
 
-  	def code_churn repo, user, end_date, week_count
-
-  		activity = Github::Repos.new( user: user, repo: repo).stats.code_frequency
-
+  	def code_churn repo, user, end_date, week_count, data
   		count=0;
   		addition_deletion_count=0.0
-  		objArray = JSON.parse(activity.to_s)
-  		objArray.reverse.each do |w|
+  		data.reverse.each do |w|
   			date = Time.at(w[0]).to_date
   			if end_date >= date && count < week_count
   				addition_deletion_count+=w[1].to_f
@@ -106,16 +126,24 @@ module GitmetricHelper
     def get_releases repo, user, project
 
       releases = []
-      releases_data = activity = Github.new.repos.releases.list user, repo
+      releases_data = JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/tags?per_page=1000", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+      
       start_date = project.info.start_date
 
+      count = 1;
       releases_data.reverse_each do |r|
-        release = Release.new
-        release.name = r.tag_name
-        release.date = r.published_at.to_date
-        release.start_date = start_date
-        releases << release
-        start_date = release.date + 1.days
+
+        if count <=4
+          release_date = (Github.new.repos.commits.get user, repo, r["commit"]["sha"]).commit.author.date
+          release = Release.new
+          release.name = r["name"]
+          release.date = release_date
+          release.start_date = start_date
+          releases << release
+          start_date = release.date + 1.days
+
+          coun +=1;
+        end
       end
 
         release = Release.new # this is for next release
@@ -128,12 +156,7 @@ module GitmetricHelper
       return releases
     end
 
-    def get_pull_request_completion_rate repo, user, start_date, end_date
-      #output = open(request_uri, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE})
-      start_date = "2013-01-04".to_date
-      end_date = "2014-05-04".to_date
-      pulls  = JSON.parse(File.read("C:\\Users\\Jason\\AppData\\Local\\Temp\\open-uri20140606-4400-c8bwfg"))
-
+    def get_pull_request_completion_rate repo, user, start_date, end_date, pulls
 
       total_requested = 0
       total_completed = 0
@@ -149,10 +172,10 @@ module GitmetricHelper
         end
       end
 
-      # puts "total_requested: #{total_requested}"
-      # puts "total_requested: #{total_completed}"
-      # puts "Rate: #{(total_completed.to_f/total_requested.to_f)*100}"
-      return (total_completed.to_f/total_requested.to_f)*100
+      puts "total_requested: #{total_requested}"
+      puts "total_requested: #{total_completed}"
+      puts "Rate: #{(total_completed.to_f/total_requested.to_f)*100}"
+      return ((total_completed.to_f/total_requested.to_f)*100).round(2)
 
     end
 	

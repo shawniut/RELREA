@@ -2,7 +2,7 @@
 
 <div class ="page-title">
 		<a class="title-text"><%=@Project.name%>::Settings</a>
-	</div>
+</div>
 
 <div id = "settings-container">
 	<div class="individual-settings-container">
@@ -108,6 +108,26 @@
 			<p><%=link_to "Edit",  {:controller => "releases", :action=> "index", :id =>  @Project.id}, :method=>"POST", :remote=>"true" %></p>
 		</div>
 		<div id= "releases-panel">
+		</div>
+	</div>
+	<div class="individual-settings-container">
+		<div class="settings-title">
+			<p>Collect data files</p>
+		</div>
+		<div class="settings-desc">
+			<p>Manage raw files</p>
+		</div>
+		<div class="status">
+			<% if @Project.raw_files_downloaded?%>
+				<div class = "green"></div>
+			<%else%>
+				<div class = "red"></div>
+			<%end%>
+		</div>
+		<div class="settings-edit">
+			<p><%=link_to "Edit",  {:controller => "raw_files", :action=> "index", :id =>  @Project.id}, :method=>"POST", :remote=>"true" %></p>
+		</div>
+		<div id= "raw-files-panel">
 		</div>
 	</div>
 

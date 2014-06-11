@@ -8,6 +8,8 @@
 		<p>Select Readiness Attributes:
 			<%=select_tag 'metrics_id', options_for_select(@Project.rattributes.collect{ |a| [a.metric.name, a.metric.id] }), {:onchange => "loadMF(this)", :include_blank => true } %>
 		</p>
+		<div id = "see-past-data"> </div>
+			
 		<div class="mf-title">
 			Selected function:
 		</div>

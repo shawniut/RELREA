@@ -38,13 +38,13 @@ class ManageValuesController < ApplicationController
         # r.value = random.rand(10..50).to_f
         if r.values.where(:end_date=>end_date).any? == false
           logger.debug "I am in if"
-          git_metric_value = get_git_metric_value  @Project.repo,  @Project.user, start_date, end_date, r.metric.name
+          git_metric_value = get_git_metric_value  @Project.repo,  @Project.user, start_date, end_date, r
           value = Value.new(:mvalue=> git_metric_value, :start_date => start_date, :end_date => end_date)
           r.save_value(value)
             count +=1
           if count == 10
             count = 0
-           sleep 30
+            sleep 30
           end
         end
         end_date = end_date + interval.days

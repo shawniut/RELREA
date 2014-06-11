@@ -25,6 +25,7 @@ class WeightsController < ApplicationController
 
   	@rattributes.each do |r|
   		r.weight = params[r.id.to_s].to_f
+      r.label = params["#{r.id}_label"]
   		r.save
   	end
 

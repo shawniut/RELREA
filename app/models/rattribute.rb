@@ -6,8 +6,9 @@ class Rattribute < ActiveRecord::Base
 
 	belongs_to :project, autosave:true
 	belongs_to :metric, :class_name => 'Dataservice::Metric'
-	belongs_to :mfunction, :class_name => 'Mfunction'
-	has_many :values, :class_name => 'Value'
+	belongs_to :raw_file, :class_name => 'RawFile', :dependent => :destroy
+	belongs_to :mfunction, :class_name => 'Mfunction', :dependent => :destroy
+	has_many :values, :class_name => 'Value', :dependent => :destroy
 
 	def save_value(value)
 		v = find_value(value)
@@ -42,6 +43,39 @@ class Rattribute < ActiveRecord::Base
 		return data
 	end
 
-	
+	def download_and_save_json_file repo, user
+		if self.metric.name == "Feature completion rate"
+       		output = get_issues_from_github user, repo
+       	elsif self.metric.name == "Features Implemented"
+         	output = get_issues_from_github user, repo
+      	elsif self.metric.name == "Code churn rate"
+        	output = get_code_churn_from_github user, repo
+		elsif self.metric.name == "Defect find rate"
+      		output = get_issues_from_github user, repo
+      	elsif self.metric.name == "Bug fix rate"
+        	output = get_issues_from_github user, repo
+      	elsif self.metric.name == "Pull-request Completion Rate"
+        	output = get_pull_requests_from_github user, repo
+      	end
+
+      	raw_file = RawFile.new :file=>output, :source=>"Github"
+  		self.raw_file = raw_file
+  		self.save
+
+	end
+
+	def get_issues_from_github user, repo
+  		return JSON.parse(open("https://api.github.com/search/issues?per_page=1000&q=label:"+label+"+user:"+user+"+repo:"+repo, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+	end
+
+	def get_pull_requests_from_github user, repo
+
+		return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/pulls?per_page=1000&state=all", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+	end
+
+	def get_code_churn_from_github user, repo
+		
+		return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/stats/code_frequency", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+	end
 
 end
