@@ -40,7 +40,7 @@ module DashboardHelper
 		average_data = []
 		start_date = release.start_date
 		#logger.debug "Start date : #{start_date}"
-		end_dates = Value.where(:rattribute_id=>project.rattributes[0].id, :start_date=>start_date).uniq.pluck(:end_date)
+		end_dates = Value.where(:rattribute_id=>project.rattributes[0].id, :start_date=>start_date).order(:end_date).uniq.pluck(:end_date)
 		#logger.debug "End date : #{end_dates}"
 		end_dates.each do |end_date|
 
