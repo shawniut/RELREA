@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140611082416) do
+ActiveRecord::Schema.define(version: 20140611085329) do
 
   create_table "criteria", force: true do |t|
     t.string   "name"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20140611082416) do
   end
 
   create_table "infos", force: true do |t|
-    t.string   "project_id"
+    t.integer  "project_id",        limit: 255
     t.date     "next_release_date"
     t.date     "start_date"
     t.datetime "created_at"
@@ -64,21 +64,21 @@ ActiveRecord::Schema.define(version: 20140611082416) do
   end
 
   create_table "rattributes", force: true do |t|
-    t.string   "project_id"
+    t.integer  "project_id",   limit: 255
     t.string   "name"
     t.float    "value"
     t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "metric_id"
-    t.string   "mfunction_id"
+    t.integer  "metric_id",    limit: 255
+    t.integer  "mfunction_id", limit: 255
     t.float    "weight"
     t.string   "label"
-    t.string   "raw_file_id"
+    t.integer  "raw_file_id",  limit: 255
   end
 
   create_table "raw_files", force: true do |t|
-    t.string   "rattribute_id"
+    t.integer  "rattribute_id", limit: 255
     t.text     "file",          limit: 255
     t.string   "source"
     t.datetime "created_at"
@@ -86,7 +86,7 @@ ActiveRecord::Schema.define(version: 20140611082416) do
   end
 
   create_table "releases", force: true do |t|
-    t.string   "project_id"
+    t.integer  "project_id", limit: 255
     t.string   "name"
     t.date     "date"
     t.datetime "created_at"
@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 20140611082416) do
   end
 
   create_table "values", force: true do |t|
-    t.string   "rattribute_id"
+    t.integer  "rattribute_id", limit: 255
     t.float    "mvalue"
     t.date     "start_date"
     t.date     "end_date"
