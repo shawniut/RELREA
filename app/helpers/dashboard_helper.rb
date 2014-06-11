@@ -8,7 +8,7 @@ module DashboardHelper
 	def get_all_series_data  project, average_data, optimistic_data, pessimistic_data, release
 		start_date = release.start_date
 		#logger.debug "Start date : #{start_date}"
-		end_dates = Value.where(:rattribute_id=>project.rattributes[0].id, :start_date=>start_date).uniq.pluck(:end_date)
+		end_dates = Value.where(:rattribute_id=>project.rattributes[0].id, :start_date=>start_date).order(:end_date).uniq.pluck(:end_date)
 		#logger.debug "End date : #{end_dates}"
 		end_dates.each do |end_date|
 
@@ -23,9 +23,15 @@ module DashboardHelper
 			optimistic_data << [days, optimistic_radiness.round(2)]
 			pessimistic_data << [days, pessimistic_radiness.round(2)]		
 		end
+
+		logger.debug average_data
+		
 		average_data = average_data.sort_by { |e| e[0] }
 		optimistic_data = optimistic_data.sort_by { |e| e[0] }
 		pessimistic_data = pessimistic_data.sort_by { |e| e[0] }
+		
+		logger.debug average_data
+
 		return average_data.to_json
 
 	end
