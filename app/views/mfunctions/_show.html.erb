@@ -50,6 +50,8 @@
 
 <script type="text/javascript">
 
+
+
 function loadMF(select_box){
 
 	if(select_box.selectedIndex != 0)
@@ -64,9 +66,13 @@ function loadMF(select_box){
     	$("#parameters").html("");
     	$('[name=commit]').prop('disabled', true);
     }
+
+    $("#mf-created").html("");
+
 }
 
 function createChart(container, series_data,mf_title){
+
 	document.getElementById("mf-title").value = mf_title;
 	chart = new Highcharts.Chart({
 		chart: {
@@ -103,6 +109,7 @@ function createChart(container, series_data,mf_title){
             enabled:false    
         },
 	});
+
 }
 
 

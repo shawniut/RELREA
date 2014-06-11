@@ -9,7 +9,9 @@ class RawFilesController < ApplicationController
   	@Project = Project.find_by(:id=>params["id"])
 
   	@Project.rattributes.each do |r|
-  		r.download_and_save_json_file @Project.repo, @Project.user
+      #if(r.raw_file == nil)
+  		  r.download_and_save_json_file @Project.repo, @Project.user
+     # end
   	end
 
   	respond_to do |format|

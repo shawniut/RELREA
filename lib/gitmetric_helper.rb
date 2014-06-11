@@ -128,12 +128,20 @@ module GitmetricHelper
       releases = []
       releases_data = JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/tags?per_page=1000", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
       
+     
+
+      four_releases = [] #taking first four releases
+      count = 1
+      releases_data.each do |r|
+        if count <=4
+          four_releases <<r
+        end
+         count +=1
+      end
+
       start_date = project.info.start_date
 
-      count = 1;
-      releases_data.reverse_each do |r|
-
-        if count <=4
+      four_releases.reverse_each do |r|
           release_date = (Github.new.repos.commits.get user, repo, r["commit"]["sha"]).commit.author.date
           release = Release.new
           release.name = r["name"]
@@ -141,9 +149,6 @@ module GitmetricHelper
           release.start_date = start_date
           releases << release
           start_date = release.date + 1.days
-
-          coun +=1;
-        end
       end
 
         release = Release.new # this is for next release
@@ -158,8 +163,8 @@ module GitmetricHelper
 
     def get_pull_request_completion_rate repo, user, start_date, end_date, pulls
 
-      total_requested = 0
-      total_completed = 0
+      total_requested = 0.0
+      total_completed = 0.0
 
       pulls.each do |p|
 
@@ -172,10 +177,11 @@ module GitmetricHelper
         end
       end
 
-      puts "total_requested: #{total_requested}"
-      puts "total_requested: #{total_completed}"
-      puts "Rate: #{(total_completed.to_f/total_requested.to_f)*100}"
-      return ((total_completed.to_f/total_requested.to_f)*100).round(2)
+      if total_completed == 0
+        return 0.0
+      else
+        return ((total_completed.to_f/total_requested.to_f)*100).round(2)
+      end
 
     end
 	

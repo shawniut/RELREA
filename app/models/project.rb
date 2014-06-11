@@ -91,11 +91,11 @@ class Project < ActiveRecord::Base
 
 		self.rattributes.each do |r|
 
-			if(r.raw_file != nil)
-				return true
+			if(r.raw_file == nil)
+				return false
 			end
 		end
-		return false
+		return true
 
 	end
 

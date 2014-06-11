@@ -34,29 +34,25 @@ class MfunctionsController < ApplicationController
 
   		@pid = params[:id]
   		@mid = params[:metrics_id]
-  		@metric = Project.find_by(id:params[:id]).rattributes.where(:metric_id =>@mid)[0]
-  		#ratts = Project.find_by(id:params[:id]).rattributes.where(:metric_id =>@mid)
+  		@metric = Project.find_by(:id=>params[:id]).rattributes.where(:metric_id =>@mid)[0]
+  		
   		mf_parameter_count = params["mf-parameters"].to_i 
 
   		@parameters = ""
-  		i=0
   		
-  		for counter in 0..(mf_parameter_count-1)
-  			@parameters+=params[i.to_s]+":"
-  			i+=1
-		end
+  		(0..mf_parameter_count-1).each do |i|
+  			@parameters += params[i.to_s]+":"
+		  end
 
-		mfunction = Mfunction.create(:name => params["mf-title"], :parameter => @parameters)
-		@metric.mfunction = mfunction
+		  mfunction = Mfunction.create(:name => params["mf-title"], :parameter => @parameters)
+		  @metric.mfunction = mfunction
+      @metric.save
 
-		message = "Membership Function Saved ("+@metric.metric.name+"-"+mfunction.name+")"
+		  flash[:notice] = "Membership Function Saved ("+ @metric.metric.name+"-"+mfunction.name+")"+@parameters
 
-		@metric.save
   		respond_to do |format|
-			 	
-			format.html { render  :controller => "mfunctions", :ation => 'index', :id => params[:id], :notice => message}
-			format.js
-		end
+			   format.js
+		  end
   end
 
   def see_past_data

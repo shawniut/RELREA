@@ -8,6 +8,7 @@
 				<th>Release Tag</th>
 				<th>Start Date</th>
 				<th>Release Date</th>
+				<th>Duration </th>
 			</tr>
 			<%i=0%>
 			<%@releases.each do |r| %>
@@ -15,6 +16,7 @@
 					<td><input type="text", id = "<%=i%>", name = "<%=i%>_name" value = "<%=r.name%>"></td>
 					<td><input type="text", id = "<%=i%>", name = "<%=i%>_start_date" value = "<%=r.start_date%>"></td>
 					<td><input type="text", id = "<%=i%>", name = "<%=i%>" value = "<%=r.date%>"></td>
+					<td><%=(r.date-r.start_date).to_i%> days</td>
 				</tr>
 				<% i+=1%>
 			<%end%>

@@ -61,20 +61,23 @@ class Rattribute < ActiveRecord::Base
       	raw_file = RawFile.new :file=>output, :source=>"Github"
   		self.raw_file = raw_file
   		self.save
+  		logger.debug "Shawn"
 
 	end
 
 	def get_issues_from_github user, repo
+		logger.debug "https://api.github.com/search/issues?per_page=1000&q=label:"+label+"+user:"+user+"+repo:"+repo
   		return JSON.parse(open("https://api.github.com/search/issues?per_page=1000&q=label:"+label+"+user:"+user+"+repo:"+repo, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
 	end
 
 	def get_pull_requests_from_github user, repo
+		logger.debug "https://api.github.com/repos/"+user+"/"+repo+"/pulls?per_page=1000&state=all"
 
 		return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/pulls?per_page=1000&state=all", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
 	end
 
 	def get_code_churn_from_github user, repo
-		
+		logger.debug "https://api.github.com/repos/"+user+"/"+repo+"/stats/code_frequency"
 		return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/stats/code_frequency", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
 	end
 

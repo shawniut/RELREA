@@ -127,6 +127,7 @@ function setChart(container, series_data,mf_title){
 }
 
 function setParameterFields(count, values, names){
+	document.getElementById("mf-parameters").value = count;
 	var html="<p>Prameters:</p>";
 	var i=0;
 	for (i=0; i<count;i++)

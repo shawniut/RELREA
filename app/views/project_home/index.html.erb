@@ -20,14 +20,18 @@
 			<%#= image_tag('logo.png', :height => 25, :class => 'logo') %>
 				<%= link_to "Release to Release Comparison", { controller: "release_to_release", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
-			<li>
+			<!--<li>
 				<a href=""> What-if Scenario</a>
 			</li>
+			-->
 			<li>
 				<%= link_to "Manage Values", { controller: "manage_values", action:"load_values", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
 			<li>
 				<%= link_to "Settings", { controller: "settings", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
+			</li>
+			<li>
+				<%= link_to "Home", { controller: "projects", action:"index", } %>
 			</li>
 		</ul>
 	</div>
