@@ -43,7 +43,7 @@ class Rattribute < ActiveRecord::Base
 		return data
 	end
 
-	def download_and_save_json_file repo, user, project
+	def download_and_save_json_file user, repo, project
 		if self.metric.name == "Feature completion rate"
        		output = get_issues user, repo, project
        	elsif self.metric.name == "Features Implemented"

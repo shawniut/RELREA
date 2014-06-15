@@ -235,7 +235,7 @@ module GitmetricHelper
   		return (addition_deletion_count/30).round(2)
   	end
 
-    def get_releases repo, user, project
+    def get_releases user, repo, project
 
       releases = []
       if(project.info.is_private == false)
