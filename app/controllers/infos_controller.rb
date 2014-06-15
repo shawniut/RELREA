@@ -19,7 +19,7 @@ class InfosController < ApplicationController
     is_private = false
     if params["private"] == "1" 
      
-      if is_private
+      if is_private == false and params["private"] == "1" 
         @Project.username = params[:github][:user_name]
         @Project.password = params[:github][:password]
       end
