@@ -13,3 +13,8 @@ Dataservice::Metric.create :name => "Code churn rate", :source => "Github", :dim
 Dataservice::Metric.create :name => "Defect find rate", :source => "Github", :dimension => "Testing"
 Dataservice::Metric.create :name => "Bug fix rate", :source => "Github", :dimension => "Testing"
 Dataservice::Metric.create :name => "Pull-request Completion Rate", :source => "Github", :dimension => "Testing"
+Dataservice::Metric.create :name => "Bug fix rate", :source => "JIRA", :dimension => "Testing"
+Dataservice::Metric.create :name => "Defect find rate", :source => "JIRA", :dimension => "Testing"
+Dataservice::Metric.create :name => "Feature completion rate", :source => "JIRA", :dimension => "Implementation"
+Dataservice::Metric.create :name => "Features Implemented", :source => "JIRA", :dimension => "Implementation"
+Dataservice::Metric.create :name => "Improvement Implemented", :source => "JIRA", :dimension => "Implementation"

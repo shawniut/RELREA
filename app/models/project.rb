@@ -7,6 +7,7 @@ class Project < ActiveRecord::Base
 	has_many :rattributes,   autosave: true, :dependent => :destroy
 	has_many :releases,   autosave: true, :dependent => :destroy
 	has_one :info, :class_name => 'Info', :dependent => :destroy
+	has_one :jira, :class_name => 'Jira', :dependent => :destroy
 	validates_presence_of :name, :repo, :user
 
 	def get_attributes_with_owa_weights start_date, end_date

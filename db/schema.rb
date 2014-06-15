@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140611085329) do
+ActiveRecord::Schema.define(version: 20140613021550) do
 
   create_table "criteria", force: true do |t|
     t.string   "name"
@@ -37,6 +37,17 @@ ActiveRecord::Schema.define(version: 20140611085329) do
     t.date     "start_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_private"
+  end
+
+  create_table "jiras", force: true do |t|
+    t.string   "url"
+    t.string   "username"
+    t.string   "password"
+    t.string   "project_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "project_id"
   end
 
   create_table "metrics", force: true do |t|
@@ -61,6 +72,9 @@ ActiveRecord::Schema.define(version: 20140611085329) do
     t.string   "user"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "project_id"
+    t.string   "username"
+    t.string   "password"
   end
 
   create_table "rattributes", force: true do |t|

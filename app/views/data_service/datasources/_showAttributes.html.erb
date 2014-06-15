@@ -7,20 +7,29 @@
 			<table class = "bordered">
 				<tr>
 					<th>Select</th>
-					<th>Readiness attribute</th>
+					<th>Source Tool</th>
+					<th>Readiness Attribute</th>
 					<th>Readiness Dimension</th>
 					
+					
 				</tr>
-				<%@Metrics.each do |m| %>
+				<%if @Project.jira != nil%>
+					<%metrics = @Metrics.order(:source)%>
+				<%else%>
+					<%metrics = @Metrics.where(:source => 'Github').order(:source)%>
+				<%end%>
+
+				<%metrics.each do |m| %>
 
 					<tr>
-						<% if @Project.is_metric_exist(m.id)%>
-							<td><input type="checkbox" checked  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>
-						<%else%>
-							<td><input type="checkbox"  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>
-						<%end%>
+							<% if @Project.is_metric_exist(m.id)%>
+								<td><input type="checkbox" checked  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>
+							<%else%>
+								<td><input type="checkbox"  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>
+							<%end%>
+						<td><%=m.source %></td>
 						<td><%=m.name %></td>
-						<td><%=m.dimension %></td>
+						<td><%=m.dimension %></td>	
 					</tr>
 					
 				<%end%>

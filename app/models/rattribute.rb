@@ -43,19 +43,23 @@ class Rattribute < ActiveRecord::Base
 		return data
 	end
 
-	def download_and_save_json_file repo, user
+	def download_and_save_json_file repo, user, project
 		if self.metric.name == "Feature completion rate"
-       		output = get_issues_from_github user, repo
+       		output = get_issues user, repo, project
        	elsif self.metric.name == "Features Implemented"
-         	output = get_issues_from_github user, repo
+         	output = get_issues user, repo, project
+        elsif self.metric.name == "Improvement Implemented"
+         	output = get_issues user, repo, project
       	elsif self.metric.name == "Code churn rate"
-        	output = get_code_churn_from_github user, repo
+        	output = get_code_churn_from_github user, repo, project
 		elsif self.metric.name == "Defect find rate"
-      		output = get_issues_from_github user, repo
+      		output = get_issues user, repo, project
       	elsif self.metric.name == "Bug fix rate"
-        	output = get_issues_from_github user, repo
+        	output = get_issues user, repo, project
       	elsif self.metric.name == "Pull-request Completion Rate"
-        	output = get_pull_requests_from_github user, repo
+        	output = get_pull_requests_from_github user, repo, project
+        elsif self.metric.name == "Defect density"
+        	output = get_commits user, repo, project
       	end
 
       	raw_file = RawFile.new :file=>output, :source=>"Github"
@@ -65,20 +69,49 @@ class Rattribute < ActiveRecord::Base
 
 	end
 
-	def get_issues_from_github user, repo
-		logger.debug "https://api.github.com/search/issues?per_page=1000&q=label:"+label+"+user:"+user+"+repo:"+repo
-  		return JSON.parse(open("https://api.github.com/search/issues?per_page=1000&q=label:"+label+"+user:"+user+"+repo:"+repo, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+	def get_issues user, repo, project
+		#logger.debug "https://api.github.com/search/issues?per_page=1000&q=label:"+label+"+user:"+user+"+repo:"+repo
+		if(project.jira != nil)
+			url = 'http://'+project.jira.username+':'+project.jira.password+'@releaseplanner.atlassian.net/rest/api/2/search?'+ self.label
+        	logger.debug url
+        	return JSON.parse(RestClient.get(url).body)
+		else
+			return JSON.parse(open("https://api.github.com/search/issues?per_page=1000&q=label:"+label+"+user:"+user+"+repo:"+repo, {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+  		end
 	end
 
-	def get_pull_requests_from_github user, repo
-		logger.debug "https://api.github.com/repos/"+user+"/"+repo+"/pulls?per_page=1000&state=all"
+	def get_commits user, repo, project
 
-		return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/pulls?per_page=1000&state=all", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+		if project.info.is_private
+			url = "https://"+project.username+":"+project.password+"@api.github.com/repos/"+user+"/"+repo+"/commits?per_page=10000"
+        	logger.debug url
+        	return JSON.parse(RestClient.get(url).body)
+		else
+			return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/commits?per_page=10000", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+		end
 	end
 
-	def get_code_churn_from_github user, repo
-		logger.debug "https://api.github.com/repos/"+user+"/"+repo+"/stats/code_frequency"
-		return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/stats/code_frequency", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+	def get_pull_requests_from_github user, repo, project
+		#logger.debug "https://api.github.com/repos/"+user+"/"+repo+"/pulls?per_page=1000&state=all"
+
+		if(project.info.is_private)
+			url = "https://"+project.username+":"+project.password+"@api.github.com/repos/"+user+"/"+repo+"/pulls?per_page=1000&state=all"
+        	logger.debug url
+        	return JSON.parse(RestClient.get(url).body)
+		else
+			return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/pulls?per_page=1000&state=all", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+		end
+	end
+
+	def get_code_churn_from_github user, repo, project
+		#logger.debug "https://api.github.com/repos/"+user+"/"+repo+"/stats/code_frequency"
+		if(project.info.is_private)
+			url = "https://"+project.username+":"+project.password+"@api.github.com/repos/"+user+"/"+repo+"/stats/code_frequency"
+        	logger.debug url
+        	return JSON.parse(RestClient.get(url).body)
+		else
+			return JSON.parse(open("https://api.github.com/repos/"+user+"/"+repo+"/stats/code_frequency", {ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read)
+		end
 	end
 
 end

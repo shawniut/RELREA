@@ -1,3 +1,5 @@
-<div class = "success_message ">
-	<h2>All files downloaded and saved successfully</h2>
-</div>
+<% if flash[:notice] %>
+  		<div class = "success_message ">
+	         <h2><%=flash[:notice] %></h2>
+	     </div>
+<% end%>

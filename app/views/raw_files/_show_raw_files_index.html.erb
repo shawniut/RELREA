@@ -10,18 +10,20 @@
 				<th>Source</th>
 				<th>Labels</th>
 				<th>Status</th>
+				<th></th>
 			</tr>
 			<%@Project.rattributes.each do |r| %>
 				<tr>
 					<td><%=r.metric.name %></td>
 					<td><%=r.metric.dimension %></td>
 					<td><%=r.metric.source %></td>
-					<td><%=r.label %></td>
+					<td><%=r.label[0..20] %></td>
 					<%if r.raw_file != nil %>
 						<td>Downloaded</td>
 					<%else%>
 						<td>-</td>
 					<%end%>
+					<td><%= link_to "Download and Save", { controller: "/raw_files", action:"download_save_files", id: @Project.id, :ra_id=>r.id},:method=>"POST", :remote=>"true" %></td>
 				</tr>
 			<%end%>
 

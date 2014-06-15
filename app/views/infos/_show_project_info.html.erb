@@ -33,14 +33,26 @@
 			</tr>
 		<tr>
 			<td align="right">
+				
+			</td>
+			<td>	
+				<% if @Project.info != nil and @Project.info.is_private %>
+					<%= check_box_tag(:private, "1",true) %>
+					<%= label_tag(:private, "private") %>
+				<%else%>
+					<%= check_box_tag(:private) %>
+					<%= label_tag(:private, "private") %>
+				<%end%>		
+					
+			</td>
+		</tr>
+		<tr>
+			<td align="right">
 				<%= label_tag(:repo, "Repo:") %>
 			</td>
-			<td>
-				
-					<%= text_field(:project, :repo, :value=>@Project.repo) %>
-				
+			<td>			
+					<%= text_field(:project, :repo, :value=>@Project.repo) %>		
 			</td>
-
 		</tr>
 		
 		<tr >
@@ -48,13 +60,71 @@
 			<td align="right">
 				<%= label_tag(:user, "User:") %>
 			</td>
-			<td>
-				
+			<td>	
 					<%= text_field(:project, :user, :value=>@Project.user) %>
 				
 			</td>
 		</tr>
-		
+		<% if @Project.info != nil and @Project.info.is_private %>
+			<tr>
+				<td align="right">
+					<%= label_tag(:git_username, "Github Username:") %>
+				</td>
+				<td>			
+						<%= text_field(:github, :user_name, :value=>@Project.username) %>		
+				</td>
+			</tr>
+			
+			<tr >
+			<tr>
+				<td align="right">
+					<%= label_tag(:git_password, "Github Password:") %>
+				</td>
+				<td>	
+						<%= text_field(:github, :password, :value=>@Project.password) %>
+					
+				</td>
+			</tr>
+		<%end%>
+		<% if @Project.jira !=nil %>
+			<tr><td  align="right"><b>JIRA info:</b></td></tr>
+			<tr>
+				<td align="right">
+					<%= label_tag(:jira_project, "Project Name:") %>
+				</td>
+				<td>	
+					<%= text_field(:jira_project, :name, :value=>@Project.jira.project_name) %>
+				
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<%= label_tag(:jira_project, "JIRA url:") %>
+				</td>
+				<td>	
+					<%= text_field(:jira_project, :url, :value=>@Project.jira.url) %>
+				
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<%= label_tag(:jira_project, "User Name:") %>
+				</td>
+				<td>	
+					<%= text_field(:jira_project, :user_name, :value=>@Project.jira.username) %>
+				
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					<%= label_tag(:jira_project, "Password:") %>
+				</td>
+				<td>	
+					<%= text_field(:jira_project, :password, :value=>@Project.jira.password) %>
+				
+				</td>
+			</tr>
+		<%end%>
 		<tr >
 			<td>
 				

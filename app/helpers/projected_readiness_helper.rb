@@ -21,6 +21,8 @@ module ProjectedReadinessHelper
 
 			if y > 1
 				y = 1
+			elsif y <0
+				y=0
 			end
 
 			logger.debug y
@@ -42,7 +44,7 @@ module ProjectedReadinessHelper
 		temp_weights = []
 
 		(1..length-1).each do |i|
-			w = 1.to_f/(i**1).to_f
+			w = 1.to_f/(i**0.6).to_f
 			sum += w
 			temp_weights << w
 		end
