@@ -22,4 +22,22 @@ class AnalysisController < ApplicationController
 			format.js	
 	end
   end
+
+  def load_attribute_satisfaction
+  	@Project = Project.find_by(:id=>params["id"])
+  	@days = params["days"].to_i
+
+    @series_name = params["series_name"]
+    @release = Release.find_by(:id =>params["release_id"])
+
+    @moving_average_order =  params["moving_average_id"].to_i
+    @interval = params["interval"].to_i
+    
+    @rattributes = @Project.get_attributes_with_owa_weights @release.start_date, @Project.get_end_date( @days, @release)
+
+  	respond_to do |format|	 	
+			#format.html { render  :controller => "dashboard", :ation => 'index', :id => params[:id]}
+			format.js	
+	end
+  end
 end

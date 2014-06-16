@@ -1,0 +1,94 @@
+$(function(){
+
+	createAttributeSatisfactionSpiderWebChart("attribute-analysis", "Comparison of satisfaction level between  <%= (@days-(@moving_average_order*@interval))%>days and <%= @days.to_i%> days");
+	<%colors = ['#FF3300','#3333FF','#000099', '#663300','#0000FF','#E819E8','#FF6666','#9900FF']%>
+	<%@Project.releases.each do |r| %>
+
+		<%if (r.has_value @Project.rattributes)  and (r.has_day @Project.rattributes, @days.to_i)%>
+			<%@days += (@moving_average_order*@interval)%>
+			<%(1..@moving_average_order).each do |i|%>
+
+				spiderWebChart.addSeries({
+	            	name: "Sat(<%= @days%> days)",
+	            	color: "<%=raw colors[@moving_average_order-i]%>",
+	            	<%logger.debug "Shawn:#{r.name}, #{@days.to_i}" %>
+	            	data:<%=@Project.get_satisfaction_level_by_date @days.to_i, r %>
+	        	});
+
+	        	<%@days += @interval %>
+
+	       <%end%>
+
+		<%end%>
+	<%end%>
+});
+
+
+function createAttributeSatisfactionSpiderWebChart(container, title ){
+	
+		spiderWebChart = new Highcharts.Chart({
+		chart: {
+                renderTo: container,
+                polar: true,
+	        	type: 'line'
+        },
+		title: {
+                text: title,
+                x: -20 //center
+        },
+	    
+	    pane: {
+	    	size: '80%'
+	    },
+
+	    
+	    xAxis: {
+	        categories: <%= raw @Project.get_attributes_names.to_json %>,
+	        tickmarkPlacement: 'on',
+	        lineWidth: 0
+	    },
+	        
+	    yAxis: {
+	        gridLineInterpolation: 'polygon',
+	        lineWidth: 0,
+	        min: 0,
+	        max: 1,
+	        tickInterval:0.25,
+	        plotBands: [{ // Light air
+                    from: 0.0,
+                    to: 0.25,
+                    color: 'rgba(255, 51, 51, 0.5)'
+                   
+                    
+                }, { // Light breeze
+                    from: 0.25,
+                    to: 0.5,
+                    color: 'rgba(255, 255, 102, 0.5)'
+                    
+                },{ // Light breeze
+                    from: 0.5,
+                    to: 0.75,
+                    color: 'rgba(128, 255, 0, 0.5)'
+                    
+                },{ // Light breeze
+                    from: 0.75,
+                    to: 1,
+                    color: 'rgba(0, 153, 76, 0.5)'
+                    
+                }]
+
+	    },
+	    
+	    tooltip: {
+	    	
+	    	shared: true,
+	        //pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>'
+	    },
+	    
+	    legend: {
+	       enabled:true    
+	    }
+	    
+	
+	});
+}

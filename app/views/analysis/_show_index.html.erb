@@ -1,3 +1,5 @@
+
+
 <div class ="page-title">
 	<a class="title-text"><%=@Project.name%>::Readiness Analysis</a>
 </div>
@@ -7,6 +9,10 @@
 		<%=select_tag 'moving_average_ids', options_for_select([[3,3],[4,4],[5,5],[6,6],[7,7],[8,8]] ),{:onchange => "loadDashboard(this)"}%>
 </p>
 <div id="readiness-analysis">
+
+</div>
+
+<div id="attribute-analysis">
 
 </div>
 
@@ -23,11 +29,15 @@ $(function(){
 
 		<% get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>
 		<% moving_average_series_data = get_moving_average_series @average_data,  @moving_average_order %>
+		
+		var time_interval = <%=@average_data[1][0]-@average_data[0][0]%>;
 
 		var average_data = check_deviation_with_moving_average_and_formate_readiness_series(<%=@average_data%>, <%=moving_average_series_data%>, <%=@moving_average_order %>);
 
+
+
 		createReadinessWithMovingAverage("readiness-analysis",average_data,
-			<%=moving_average_series_data%>,"Readiness Over Time");
+			<%=moving_average_series_data%>,"Readiness Over Time",time_interval);
 		// <% if @Release.name == 'next'%>
 		// 	$("#cr-text").html("CR: <%=@average_data[@average_data.length-1][1]%>");
 		// 	$("#pr-text").html("PR: <%= (get_projected_series @average_data, (@Project.info.next_release_date-@Release.start_date).to_i)[1][1] %>");
@@ -48,7 +58,7 @@ function check_deviation_with_moving_average_and_formate_readiness_series(readin
 	end
 }
 
-function createReadinessWithMovingAverage(container, average_data, moving_average_data, chart_title){
+function createReadinessWithMovingAverage(container, average_data, moving_average_data, chart_title, t_interval){
 	
 	chart = new Highcharts.Chart({
 		chart: {
@@ -95,15 +105,16 @@ function createReadinessWithMovingAverage(container, average_data, moving_averag
                     point: {
                         events: {
                             click: function (e) {
+                
 
                             	$.ajax({
                             		type: "POST",
-                            		url: "/dashboard/"+<%=@Project.id%>+"/load_satisfaction_by_day",
+                            		url: "/analysis/"+<%=@Project.id%>+"/load_attribute_satisfaction",
                             		data: { days: e.point.x,
                             				series_name: this.series.name,
-                            				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value
-
-
+                            				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value,
+                            				moving_average_id: document.getElementById("moving_average_ids").options[document.getElementById("moving_average_ids").selectedIndex].value,
+                            				interval:t_interval
                             		 }
                             	});
                                //alert("I am here"+ this.series);
