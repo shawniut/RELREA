@@ -5,7 +5,7 @@ $(function(){
 	<%@Project.releases.each do |r| %>
 
 		<%if (r.has_value @Project.rattributes)  and (r.has_day @Project.rattributes, @days.to_i)%>
-			<%@days += (@moving_average_order*@interval)%>
+			<%@days -= (@moving_average_order*@interval)%>
 			<%(1..@moving_average_order).each do |i|%>
 
 				spiderWebChart.addSeries({
@@ -16,7 +16,6 @@ $(function(){
 	        	});
 
 	        	<%@days += @interval %>
-
 	       <%end%>
 
 		<%end%>
