@@ -17,7 +17,7 @@ class DashboardController < ApplicationController
 
   	respond_to do |format|	 	
 			format.js	
-	end
+	  end
   end
   
   def load_satisfaction_by_day

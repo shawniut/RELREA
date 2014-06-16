@@ -14,6 +14,9 @@
 				<%= link_to "Dashboard", { controller: "dashboard", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
 			<li>
+				<%= link_to "Readiness Analysis", { controller: "analysis", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
+			</li>
+			<li>
 				<%= link_to "Projected Readiness", { controller: "projected_readiness", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
 			<li >

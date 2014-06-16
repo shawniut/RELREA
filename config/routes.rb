@@ -1,5 +1,6 @@
 RELREA::Application.routes.draw do
 
+  get "analysis/index"
   get "raw_files/index"
   get "projects/index"
   get "release_to_release/index"
@@ -24,6 +25,11 @@ RELREA::Application.routes.draw do
         post 'show'
         post 'load_satisfaction_by_day'
         post 'show_attributes_trend'
+    end
+  end
+  resources :analysis do
+    member do
+        post 'index'
     end
   end
   resources :release_to_release do

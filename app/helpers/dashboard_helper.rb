@@ -36,6 +36,38 @@ module DashboardHelper
 
 	end
 
+	def get_moving_average_series data, k
+
+		moving_average_series = []
+		interval = data[1][0] - data[0][0]
+
+
+		(k..data.length).each do |i|
+			days = data[i-1][0]
+			moving_average_rr = 0.0
+			(i-k..i-1).each do |j|
+				moving_average_rr += data[j][1]
+
+			end
+			moving_average_series << [days+interval,(moving_average_rr/k).round(2)]
+		end
+
+		return moving_average_series
+
+	end
+
+	# def check_deviation_with_moving_average_and_formate_readiness_series readiness_data, moving_average_data, k
+
+	# 	(k..moving_average_data.length-2).each do |i|
+	# 		if readiness_data[i][1]< moving_average_data[i][1]
+
+	# 			readiness_data[i][1] = {y: + readiness_data[i][1] , color: 'red'}
+	# 		end
+	# 	end
+
+	# 	return readiness_data
+	# end
+
 	def get_all_series_data_average  project,release
 		average_data = []
 		start_date = release.start_date
