@@ -7,7 +7,7 @@ $(function(){
 		<%if (r.has_value @Project.rattributes)  and (r.has_day @Project.rattributes, @days.to_i)%>
 			<%@days -= (@moving_average_order*@interval)%>
 			<%(1..@moving_average_order).each do |i|%>
-
+				<%@days += @interval %>
 				spiderWebChart.addSeries({
 	            	name: "Sat(<%= @days%> days)",
 	            	color: "<%=raw colors[@moving_average_order-i]%>",
@@ -15,7 +15,7 @@ $(function(){
 	            	data:<%=@Project.get_satisfaction_level_by_date @days.to_i, r %>
 	        	});
 
-	        	<%@days += @interval %>
+	        	
 	       <%end%>
 
 		<%end%>
