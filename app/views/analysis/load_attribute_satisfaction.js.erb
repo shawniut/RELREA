@@ -1,26 +1,67 @@
 $(function(){
 
+	createAttributesMovingAverageChart("bottlenec-analysis", "Bottlenec Factor Analysis");
 	createAttributeSatisfactionSpiderWebChart("attribute-analysis", "Comparison of satisfaction level between  <%= (@days-(@moving_average_order*@interval))%>days and <%= @days.to_i%> days");
+	
+	var overall_ma_data = <%=raw @moving_average_data.map{|key,value|[value[0].to_f,value[1].to_f]}%>;
 	<%colors = ['#FF3300','#3333FF','#000099', '#663300','#0000FF','#E819E8','#FF6666','#9900FF']%>
+	<%colors2 = ['#F79F81','#3333FF','#000099', '#663300','#0000FF','#E819E8','#FF6666','#9900FF']%>
 	<%@Project.releases.each do |r| %>
-
 		<%if (r.has_value @Project.rattributes)  and (r.has_day @Project.rattributes, @days.to_i)%>
+
+			<%color_index = 0%>
+			<%@Project.rattributes.each do |ra| %>
+				<% attribute_satisfaction_data =  ra.get_satisfaction_over_time @Project, @release%>
+				<% attribute_moving_average_data =  get_moving_average_series attribute_satisfaction_data,  @moving_average_order%>
+				attributeMAchart.addSeries({
+		            name: "MA(<%= ra.metric.name%>)",
+		            //color:"<%=raw colors2[color_index]%>",
+		            color:'black',
+		            lineWidth: 1,
+		            dashStyle:'ShortDash',
+		            data:identify_bottleneck_and_formate_readiness_series(overall_ma_data,<%=attribute_moving_average_data%>)
+		        });
+		        <%color_index += 1%>
+			<%end%>
+
+			attributeMAchart.addSeries({
+	            name: "Moving Average (Overall Readiness)",
+	            color: '#8181F7',
+	            lineWidth: 2,
+	            data:overall_ma_data,
+	            marker:{
+	            	fillColor: '#8181F7'
+	            }
+
+	        });
+
+
 			<%@days -= (@moving_average_order*@interval)%>
 			<%(1..@moving_average_order).each do |i|%>
 				<%@days += @interval %>
 				spiderWebChart.addSeries({
 	            	name: "Sat(<%= @days%> days)",
 	            	color: "<%=raw colors[@moving_average_order-i]%>",
-	            	<%logger.debug "Shawn:#{r.name}, #{@days.to_i}" %>
 	            	data:<%=@Project.get_satisfaction_level_by_date @days.to_i, r %>
 	        	});
-
-	        	
 	       <%end%>
 
 		<%end%>
 	<%end%>
 });
+
+function identify_bottleneck_and_formate_readiness_series(overall_ma, attribute_ma){
+		var i = 0;
+		for(i=0; i<overall_ma.length;i++){
+			if (attribute_ma[i][1] < overall_ma[i][1]){
+				attribute_ma[i] = {x:attribute_ma[i][0], y:attribute_ma[i][1] , color: 'red'}
+			}else{
+				attribute_ma[i] = {x:attribute_ma[i][0], y:attribute_ma[i][1] , color: 'green'}
+			}
+		}
+		return attribute_ma
+	end
+}
 
 
 function createAttributeSatisfactionSpiderWebChart(container, title ){
@@ -35,12 +76,11 @@ function createAttributeSatisfactionSpiderWebChart(container, title ){
                 text: title,
                 x: -20 //center
         },
-	    
+
 	    pane: {
 	    	size: '80%'
 	    },
 
-	    
 	    xAxis: {
 	        categories: <%= raw @Project.get_attributes_names.to_json %>,
 	        tickmarkPlacement: 'on',
@@ -86,8 +126,40 @@ function createAttributeSatisfactionSpiderWebChart(container, title ){
 	    
 	    legend: {
 	       enabled:true    
-	    }
-	    
+	    }    
 	
+	});
+}
+
+
+function createAttributesMovingAverageChart(container, title){
+	
+	attributeMAchart = new Highcharts.Chart({
+		chart: {
+                renderTo: container,
+                zoomType: 'x'
+        },
+		title: {
+                text:title,
+                x: -20 //center
+        },
+	    xAxis: {
+	    	title: {
+                    text:"Development Time (days)"
+                },
+	       tickInterval:7,
+
+	    },    
+	    yAxis: {
+	    	title: {
+                    text:"Readiness"
+                },
+	        max: 1,
+	        min:0,
+	        tickInterval:0.25
+	    },
+	    legend: {
+            enabled:true    
+        }
 	});
 }

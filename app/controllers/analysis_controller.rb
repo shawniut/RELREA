@@ -27,6 +27,8 @@ class AnalysisController < ApplicationController
   	@Project = Project.find_by(:id=>params["id"])
   	@days = params["days"].to_i
 
+  	@moving_average_data = params['moving_average_data']
+
     @series_name = params["series_name"]
     @release = Release.find_by(:id =>params["release_id"])
 

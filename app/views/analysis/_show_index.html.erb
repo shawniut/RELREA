@@ -12,6 +12,10 @@
 
 </div>
 
+<div id="bottlenec-analysis">
+
+</div>
+
 <div id="attribute-analysis">
 
 </div>
@@ -114,7 +118,8 @@ function createReadinessWithMovingAverage(container, average_data, moving_averag
                             				series_name: this.series.name,
                             				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value,
                             				moving_average_id: document.getElementById("moving_average_ids").options[document.getElementById("moving_average_ids").selectedIndex].value,
-                            				interval:t_interval
+                            				interval:t_interval,
+                            				moving_average_data:moving_average_data
                             		 }
                             	});
                                //alert("I am here"+ this.series);
