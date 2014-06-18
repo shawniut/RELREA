@@ -20,6 +20,12 @@
 
 </div>
 
+<%# get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>
+
+<%#@average_data.each do |d| %>
+	<%#="#{d[0]} #{d[1]}"%>
+<%#end%>
+
 
 <script type="text/javascript">
 
@@ -38,9 +44,7 @@ $(function(){
 
 		var average_data = check_deviation_with_moving_average_and_formate_readiness_series(<%=@average_data%>, <%=moving_average_series_data%>, <%=@moving_average_order %>);
 
-
-
-		createReadinessWithMovingAverage("readiness-analysis",average_data,
+				createReadinessWithMovingAverage("readiness-analysis",average_data,
 			<%=moving_average_series_data%>,"Readiness Over Time",time_interval);
 		// <% if @Release.name == 'next'%>
 		// 	$("#cr-text").html("CR: <%=@average_data[@average_data.length-1][1]%>");

@@ -15,7 +15,7 @@ class RawFile < ActiveRecord::Base
 		# latest 5 issues from a project with 'Major' priority
 
 		#url = "http://api-user:api-user@releaseplanner.atlassian.net/rest/api/2/search?maxResults=1000&jql=project%20=%20RP%20AND%20issuetype%20=%20Bug%20AND%20status%20in%20(Open,%20\"In%20Progress\",%20Reopened,%20Resolved,%20Closed)"
-		url = 'https://api-user:api-user@releaseplanner.atlassian.net/rest/api/2/search?maxResults=1000&jql=project%20=%20RP%20AND%20issuetype%20=%20Improvement%20AND%20status%20=%20Closed'
+		url = 'https://api-user:api-user@releaseplanner.atlassian.net/rest/api/2/search?maxResults=1000&jql=project%20%3D%20RP%20AND%20issuetype%20%3D%20%22New%20Feature%22%20AND%20priority%20in%20(Minor%2C%20Trivial)'
 		puts url.to_s
 		response = RestClient.get(url)
 		if(response.code != 200)

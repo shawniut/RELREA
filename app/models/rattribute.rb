@@ -60,6 +60,14 @@ class Rattribute < ActiveRecord::Base
         	output = get_pull_requests_from_github user, repo, project
         elsif self.metric.name == "Defect density"
         	output = get_commits user, repo, project
+        elsif self.metric.name == "High priority Features implementation ratio"
+         	output = get_issues user, repo, project
+        elsif self.metric.name == "Low priority Features Implementation ratio"
+         	output = get_issues user, repo, project
+        elsif self.metric.name == "High priority improvement implementation ratio"
+         	output = get_issues user, repo, project
+        elsif self.metric.name == "Low priority improvement implementation ratio"
+         	output = get_issues user, repo, project
       	end
 
       	raw_file = RawFile.new :file=>output, :source=>"Github"

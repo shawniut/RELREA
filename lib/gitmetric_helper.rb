@@ -52,8 +52,19 @@ module GitmetricHelper
       
       elsif rattribute.metric.name == "Pull-request Completion Rate"
         return get_pull_request_completion_rate repo, user, start_date, end_date, rattribute.raw_file.file
+      
       elsif rattribute.metric.name == "Defect density"
         return get_defect_density repo, user, start_date, end_date, rattribute.raw_file.file, project
+      
+      elsif rattribute.metric.name == "High priority Features implementation ratio" and project.jira != nil
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
+      elsif rattribute.metric.name == "Low priority Features Implementation ratio" and project.jira != nil
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
+       elsif rattribute.metric.name == "High priority improvement implementation ratio" and project.jira != nil
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
+      elsif rattribute.metric.name == "Low priority improvement implementation ratio" and project.jira != nil
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
+
       end
 
     end 
@@ -170,7 +181,6 @@ module GitmetricHelper
   		fcr = (total_count.to_f/days.to_f)
   		
   		return fcr.round(2)
-
   	end
 
     def feature_completion_ratio_jira repo, user, start_date, end_date,label, issues
@@ -186,6 +196,26 @@ module GitmetricHelper
 
       days = (end_date-start_date).to_i
       fcr = (total_count.to_f/days.to_f)
+      
+      return fcr.round(2)
+
+    end
+
+    def feature_implementation_ratio_jira repo, user, start_date, end_date,label, issues
+       implemented_feature_count = 0
+       total_feature_count = 0
+        issues["issues"].each do |issue|
+          updated_at = issue['fields']['updated'].to_date
+          issue_type = issue['fields']['issuetype']['name']
+          state = issue['fields']['status']['name'] 
+          if updated_at >=start_date and updated_at <= end_date and state == 'Closed'
+             implemented_feature_count+=1
+          end
+          total_feature_count +=1
+       end
+
+      days = (end_date-start_date).to_i
+      fcr = (implemented_feature_count.to_f/total_feature_count.to_f)
       
       return fcr.round(2)
 
