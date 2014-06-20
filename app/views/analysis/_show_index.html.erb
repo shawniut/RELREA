@@ -52,7 +52,7 @@ $(function(){
 		var average_data = check_deviation_with_moving_average_and_formate_readiness_series(<%= @average_data%>, <%=moving_average_series_data%>, <%=@moving_average_order %>);
 
 				createReadinessWithMovingAverage("readiness-analysis",average_data,
-			<%=moving_average_series_data%>,"Readiness Over Time",time_interval);
+			<%=moving_average_series_data%>,"<%=@Project.name%> Readiness Over Time",time_interval);
 
 		<%i=2%>
 		<%top=270%>
@@ -154,7 +154,7 @@ function createReadinessWithMovingAverage(container, average_data, moving_averag
 			},
 
 			title : {
-				text : 'Release Readiness Over Time'
+				text : chart_title
 			},xAxis:{
 	    		
 	        	opposite: true,
