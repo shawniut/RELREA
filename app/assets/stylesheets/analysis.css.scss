@@ -6,11 +6,12 @@
 	float:left;
 	margin: 5px;
 	width: 97%;
-	height:350px;
+	//height:350px;
 	padding: 10px;
 	border:solid 1px #D8D8D8;
 	border-radius:5px;
 	background-color: #FAFAFA;
+	overflow:hidden;
 }
 
 #attribute-analysis{
@@ -25,6 +26,17 @@
 }
 
 #bottlenec-analysis{
+	float:left;
+	margin: 5px;
+	width: 97%;
+	height:350px;
+	padding: 10px;
+	border:solid 1px #D8D8D8;
+	border-radius:5px;
+	background-color: #FAFAFA;
+}
+
+#impact-of-RR-attributes{
 	float:left;
 	margin: 5px;
 	width: 97%;

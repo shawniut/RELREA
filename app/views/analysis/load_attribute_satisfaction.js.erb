@@ -1,13 +1,16 @@
 $(function(){
 
 	createAttributesMovingAverageChart("bottlenec-analysis", "Bottlenec Factor Analysis");
-	createAttributeSatisfactionSpiderWebChart("attribute-analysis", "Comparison of satisfaction level between  <%= (@days-(@moving_average_order*@interval))%>days and <%= @days.to_i%> days");
+	createAttributeSatisfactionSpiderWebChart("attribute-analysis", "Comparison of satisfaction level between  <%= (@days-(@moving_average_order*@interval))%> days and <%= @days.to_i%> days");
 	
 	var overall_ma_data = <%=raw @moving_average_data.map{|key,value|[value[0].to_f,value[1].to_f]}%>;
 	<%colors = ['#FF3300','#3333FF','#000099', '#663300','#0000FF','#E819E8','#FF6666','#9900FF']%>
 	<%colors2 = ['#F79F81','#3333FF','#000099', '#663300','#0000FF','#E819E8','#FF6666','#9900FF']%>
 	<%@Project.releases.each do |r| %>
 		<%if (r.has_value @Project.rattributes)  and (r.has_day @Project.rattributes, @days.to_i)%>
+
+			<%series_data = get_attributes_impact  @Project, r, @days.to_i%>
+			createAttributesImpactonOverallRRChart("impact-of-RR-attributes", "Individual attribute's impact on overall RR score upto <%=@days%> days", <%=series_data%>);
 
 			<%color_index = 0%>
 			<%@Project.rattributes.each do |ra| %>
@@ -49,6 +52,8 @@ $(function(){
 		<%end%>
 	<%end%>
 });
+
+
 
 function identify_bottleneck_and_formate_readiness_series(overall_ma, attribute_ma){
 		var i = 0;
@@ -162,4 +167,86 @@ function createAttributesMovingAverageChart(container, title){
             enabled:true    
         }
 	});
+}
+
+
+function createAttributesImpactonOverallRRChart(container, title,  series_data ){
+	
+		chart2 = new Highcharts.Chart({
+            chart: {
+            	renderTo: container,
+                
+            },
+            title: {
+                text:title,
+                 x: -20 //center
+            },
+           
+            xAxis: {
+                categories: <%= raw @Project.get_attributes_names.to_json %>,
+            },
+            yAxis:[{ // Primary yAxis
+            labels: {
+                format: '{value} % ',
+            },
+            title: {
+                text: '% of ocuurance',
+            },
+            opposite: true
+
+        }, { // Secondary yAxis
+            gridLineWidth: 0,
+            title: {
+                text: 'Average deviation with overall readiness ',  
+            },
+            min: 0,
+	        max: 1,
+            labels: {
+              format: '{value}',   
+            }
+
+        },],
+            tooltip: {
+                // headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                // pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                //     '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                // footerFormat: '</table>',
+                // shared: true,
+                // useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+            	type: 'column',
+            	yAxis: 1,
+                name: 'Average negetive deviation',
+                color:'red',
+                data: series_data[0]
+    
+            }, {
+            	type: 'column',
+            	yAxis: 1,
+                name: 'Average positive deviation',
+                color: 'green',
+                data:series_data[1]
+    
+            },
+            {
+            	type: 'column',
+                name: 'Negetive deviation',
+                //color:'red',
+                data: series_data[2]
+    
+            }, {
+            	type: 'column',
+                name: 'Positive deviation',
+                //color: 'green',
+                data:series_data[3]
+    
+            }]
+        });
 }

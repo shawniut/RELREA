@@ -15,6 +15,12 @@
 <div id="bottlenec-analysis">
 
 </div>
+<!-- <div class="mf-title">
+	Show individual attribute's impact on overall RR score:
+</div> -->
+<div id="impact-of-RR-attributes">
+
+</div>
 
 <div id="attribute-analysis">
 
@@ -23,7 +29,7 @@
 <%# get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>
 
 <%#@average_data.each do |d| %>
-	<%#="#{d[0]} #{d[1]}"%>
+	<%#="#{d[0]} #{d[1]}"%> <!-- <br> -->
 <%#end%>
 
 
@@ -38,21 +44,75 @@
 $(function(){
 
 		<% get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>
+		<%@average_data = formate_date @average_data, @Project.info.start_date %>
 		<% moving_average_series_data = get_moving_average_series @average_data,  @moving_average_order %>
 		
 		var time_interval = <%=@average_data[1][0]-@average_data[0][0]%>;
 
-		var average_data = check_deviation_with_moving_average_and_formate_readiness_series(<%=@average_data%>, <%=moving_average_series_data%>, <%=@moving_average_order %>);
+		var average_data = check_deviation_with_moving_average_and_formate_readiness_series(<%= @average_data%>, <%=moving_average_series_data%>, <%=@moving_average_order %>);
 
 				createReadinessWithMovingAverage("readiness-analysis",average_data,
 			<%=moving_average_series_data%>,"Readiness Over Time",time_interval);
-		// <% if @Release.name == 'next'%>
-		// 	$("#cr-text").html("CR: <%=@average_data[@average_data.length-1][1]%>");
-		// 	$("#pr-text").html("PR: <%= (get_projected_series @average_data, (@Project.info.next_release_date-@Release.start_date).to_i)[1][1] %>");
-		// <%else%>
-		// 	$("#cr-text").html("CR: <%=@average_data[@average_data.length-1][1]%>");
-		// 	$("#pr-text").html("PR: N/A");
-		// <%end%>
+
+		<%i=2%>
+		<%top=270%>
+		<%@Project.rattributes.each do |ra| %>
+				
+				<% attribute_satisfaction_data =  ra.get_satisfaction_over_time @Project, @Release%>
+				<%positive_series = []%>
+				<%negetive_series = []%>
+				<% get_positive_negetive_chart @average_data, attribute_satisfaction_data, positive_series, negetive_series %>
+				
+				dashboart_chart.addAxis({
+					title: {
+                    	text:"Metric"
+                	},
+	                top:<%=top%>,
+	                height:40,
+	                offset: 0,
+		        	max: 1,
+		        	min:0,
+		        	gridLineWidth: 0,
+                	minorGridLineWidth: 0,
+		        	tickInterval:0.5,
+		        	opposite: false
+		        });
+				dashboart_chart.addSeries({
+					type: 'arearange',
+					yAxis:<%=i%>,
+		            name: "<%= ra.metric.name%>",
+		            color:'rgba(0, 153, 76, 0.5)',
+		            lineWidth: 1,            
+		            //dashStyle:'ShortDash',
+		            enableMouseTracking: false,
+		            data:<%=positive_series%>
+		        });
+		        dashboart_chart.addSeries({
+					type: 'arearange',
+					yAxis:<%=i%>,
+		            name: "<%= ra.metric.name%>",
+		            color:'rgba(255, 51, 51, 0.5)',
+		            lineWidth: 1,
+		            //dashStyle:'ShortDash',
+		            enableMouseTracking: false,
+		            data:<%= negetive_series%>
+		        });
+
+		          dashboart_chart.addSeries({
+					type: 'line',
+					yAxis:<%=i%>,
+		            name: "<%= ra.metric.name%>",
+		            color:'blue',
+		            lineWidth: 1,
+		            //dashStyle:'ShortDash',
+		            data:<%=formate_date attribute_satisfaction_data, @Project.info.start_date%>
+		        });
+		        
+				<%top+=50%>
+		        <%i +=1%>
+		       
+		<%end%>
+		
 });
 
 function check_deviation_with_moving_average_and_formate_readiness_series(readiness_data, moving_average_data, k){
@@ -66,76 +126,170 @@ function check_deviation_with_moving_average_and_formate_readiness_series(readin
 	end
 }
 
+function check_deviation_with_average_series(readiness_data, attribute_data, k){
+		var i = 0
+		for(i=0; i<attribute_data.length-2;i++){
+			if (readiness_data[k+i][1] < attribute_data[i][1]){
+				//readiness_data[k+i] = {x:readiness_data[k+i][0], y:readiness_data[k+i][1] , color: 'red'}
+			}
+		}
+		return readiness_data
+	end
+}
+
+
+
+
 function createReadinessWithMovingAverage(container, average_data, moving_average_data, chart_title, t_interval){
-	
-	chart = new Highcharts.Chart({
-		chart: {
+	dashboart_chart = new Highcharts.StockChart( {
+			chart: {
                 renderTo: container,
-                 zoomType: 'x'
-        },
-		title: {
-                text: chart_title,
-                x: -20 //center
-        },
-	    xAxis: {
-	    	title: {
-                    text:"Development Time (days)"
-                },
-	       tickInterval:7,
+                alignTicks: true,
+                height:780,
 
-	    },
+            },
+			rangeSelector : {
+				selected : 5,
+				inputEnabled:true
+			},
+
+			title : {
+				text : 'Release Readiness Over Time'
+			},xAxis:{
+	    		
+	        	opposite: true,
+	        	offset: -30,
+	    	},
+			yAxis:[{
+	    		title: {
+                    text:"Overall Readiness"
+                },
+                height:100,
+	        	max: 1,
+	        	min:0,
+	        	gridLineWidth: 1,
+	        	tickInterval:0.5,
+	        	opposite: false
+	    	},{
+	    		title: {
+                    text:"Moving Average"
+                },
+                top:200,
+                height:50,
+                offset: 0,
+	        	max: 1,
+	        	min:0,
+	        	gridLineWidth: 1,
+	        	tickInterval:0.5,
+	        	opposite: false
+	   		}],
+			series : [{
+				yAxis: 0,
+				name : 'Average Readiness',
+				color: '#31B404',
+				data : average_data,
+				lineWidth: 3,
+				dataLabels: {
+            		//enabled: true,
+        		},
+				tooltip: {
+					valueDecimals: 2
+				}
+			},{
+				yAxis: 1,
+				name : 'Moving Average',
+				color: '#8181F7',
+				lineWidth: 3,
+				data : moving_average_data,
+				tooltip: {
+					valueDecimals: 2
+				}
+			}],
+			
+			legend: {
+            	//enabled:true    
+        	},
+		});
+	// chart = new Highcharts.Chart('StockChart',{
+	// 	chart: {
+ //                renderTo: container,
+ //                 zoomType: 'x'
+ //        },
+	// 	title: {
+ //                text: chart_title,
+ //                x: -20 //center
+ //        },
+	//     xAxis: {
+	//     	title: {
+ //                    text:"Development Time (days)"
+ //                },
+	//        tickInterval:7,
+
+	//     },
 	    
-	    yAxis: {
-	    	title: {
-                    text:"Readiness"
-                },
-	        max: 1,
-	        min:0
-	    },
+	//     yAxis:[{
+	//     	title: {
+ //                    text:"Readiness"
+ //                },
+	//         max: 1,
+	//         min:0
+	//     },{
+	//     	title: {
+ //                    text:"Readiness"
+ //                },
+	//         max: 1,
+	//         min:0
+	//     }],
 
-	    series: [{
-	    	color: '#31B404',
-	    	name: 'Actual Readiness',
-	        data:average_data  
-	    },{
-	    	color: '#8181F7',
-	    	name: 'Moving Average',
-	        data:moving_average_data  
-	    }],
+	//     series: [{
 
-	    legend: {
-            enabled:true    
-        },
+	//     	color: '#31B404',
+	//     	name: 'Actual Readiness',
+	//         //data:average_data 
+	//         data:[[1,1],[2,2]] 
+	//     },{
+	//     	//yAxis = 1,
+	//     	color: '#8181F7',
+	//     	name: 'Moving Average',
+	//         //data:moving_average_data  
+	//         data:[[1,1],[2,2]]
+	//     }],
 
-         plotOptions: {
-                series: {
-                    cursor: 'pointer',
-                    point: {
-                        events: {
-                            click: function (e) {
+	//     legend: {
+ //            enabled:true    
+ //        },
+
+ //         plotOptions: {
+ //                series: {
+ //                    cursor: 'pointer',
+ //                    point: {
+ //                        events: {
+ //                            click: function (e) {
                 
 
-                            	$.ajax({
-                            		type: "POST",
-                            		url: "/analysis/"+<%=@Project.id%>+"/load_attribute_satisfaction",
-                            		data: { days: e.point.x,
-                            				series_name: this.series.name,
-                            				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value,
-                            				moving_average_id: document.getElementById("moving_average_ids").options[document.getElementById("moving_average_ids").selectedIndex].value,
-                            				interval:t_interval,
-                            				moving_average_data:moving_average_data
-                            		 }
-                            	});
-                               //alert("I am here"+ this.series);
-                            }
-                        }
-                    },
-                    marker: {
-                        lineWidth: 1
-                    }
-                }
-            },
-	});
+ //                            	$.ajax({
+ //                            		type: "POST",
+ //                            		url: "/analysis/"+<%=@Project.id%>+"/load_attribute_satisfaction",
+ //                            		data: { days: e.point.x,
+ //                            				series_name: this.series.name,
+ //                            				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value,
+ //                            				moving_average_id: document.getElementById("moving_average_ids").options[document.getElementById("moving_average_ids").selectedIndex].value,
+ //                            				interval:t_interval,
+ //                            				moving_average_data:moving_average_data
+ //                            		 }
+ //                            	});
+ //                               //alert("I am here"+ this.series);
+ //                            }
+ //                        }
+ //                    },
+ //                    marker: {
+ //                        lineWidth: 1
+ //                    }
+ //                }
+ //            },
+	// });
+
+ 
 }
 
 function loadDashboard(release_ids){
