@@ -12,6 +12,23 @@ class ReleasesController < ApplicationController
     end
   end
 
+  def new_release
+    name = params[:release][:name]
+    start_date = params[:release][:start_date].to_date
+    end_date = params[:release][:end_date].to_date
+
+    release = Release.create(:name=>name, :date=>end_date, :start_date => start_date)
+
+    @Project = Project.find_by(:id => params["id"])
+    @Project.releases << release
+    @Project.save
+
+    respond_to do |format|
+      format.js
+    end
+
+  end
+
   def save 
   	@Project = Project.find_by(:id => params["id"])
   	release_count = params["release_count"].to_i

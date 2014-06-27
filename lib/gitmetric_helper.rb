@@ -18,7 +18,7 @@ module GitmetricHelper
 
   	end
 
-    def get_git_metric_value repo, user, start_date, end_date, rattribute, project
+    def get_git_metric_value repo, user, start_date, end_date, rattribute, project, release
 
       if rattribute.metric.name == "Feature completion rate" and project.jira == nil
         return feature_completion_ratio repo, user, start_date, end_date,rattribute.label, rattribute.raw_file.file
@@ -57,19 +57,43 @@ module GitmetricHelper
         return get_defect_density repo, user, start_date, end_date, rattribute.raw_file.file, project
       
       elsif rattribute.metric.name == "High priority Features implementation ratio" and project.jira != nil
-         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file, (get_feature_count_for_rp2 'FH', release)
       elsif rattribute.metric.name == "Low priority Features Implementation ratio" and project.jira != nil
-         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file, (get_feature_count_for_rp2 'FL', release)
        elsif rattribute.metric.name == "High priority improvement implementation ratio" and project.jira != nil
-         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file, (get_feature_count_for_rp2 'IH', release)
       elsif rattribute.metric.name == "Low priority improvement implementation ratio" and project.jira != nil
-         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file, (get_feature_count_for_rp2 'IL', release)
+      elsif rattribute.metric.name == "Improvement implementation ratio" and project.jira != nil
+         return feature_implementation_ratio_jira repo, user, start_date, end_date, rattribute.label, rattribute.raw_file.file, (get_feature_count_for_rp2 'II', release)
 
       end
 
     end 
 
+    def get_feature_count_for_rp2 label, release 
 
+      if release.name == 'Milestone 1'
+        #logger.debug "..............."
+        if label == 'FH'
+          return 11
+        elsif label == 'FL'
+          return 3
+        elsif label == 'II'
+          return 16
+        end
+      elsif release.name == 'next'
+        #logger.debug "*******************"
+        if label == 'FH'
+          return 12
+        elsif label == 'FL'
+          return 2
+        elsif label == 'II'
+          return 12
+        end
+      end
+
+    end
 
   	def defect_find_rate repo, user, start_date, end_date, label, issues
   		days = (end_date-start_date).to_i
@@ -185,6 +209,7 @@ module GitmetricHelper
 
     def feature_completion_ratio_jira repo, user, start_date, end_date,label, issues
        total_count = 0
+
         issues["issues"].each do |issue|
           updated_at = issue['fields']['updated'].to_date
           issue_type = issue['fields']['issuetype']['name']
@@ -201,22 +226,26 @@ module GitmetricHelper
 
     end
 
-    def feature_implementation_ratio_jira repo, user, start_date, end_date,label, issues
+    def feature_implementation_ratio_jira repo, user, start_date, end_date,label, issues, count
        implemented_feature_count = 0
        total_feature_count = 0
         issues["issues"].each do |issue|
           updated_at = issue['fields']['updated'].to_date
+          created_at = issue['fields']['created'].to_date
           issue_type = issue['fields']['issuetype']['name']
           state = issue['fields']['status']['name'] 
-          if updated_at >=start_date and updated_at <= end_date and state == 'Closed'
+          if (updated_at >=start_date and updated_at <= end_date) or (created_at >=start_date and created_at <= end_date) and state == 'Closed'
              implemented_feature_count+=1
           end
           total_feature_count +=1
        end
 
-      days = (end_date-start_date).to_i
-      fcr = (implemented_feature_count.to_f/total_feature_count.to_f)
+       #logger.debug "T: #{count} F #{implemented_feature_count} Ratio:#{(implemented_feature_count.to_f/count.to_f)}"
       
+      fcr = (implemented_feature_count.to_f/count.to_f)
+      if count == 0
+        return 0
+      end
       return fcr.round(2)
 
     end

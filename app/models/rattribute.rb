@@ -2,7 +2,7 @@ class Rattribute < ActiveRecord::Base
 	include GitmetricHelper
 	include MembershipFunctionHelper
 
-	attr_accessor :satisfaction_degree,:optimistic_weight,:pessimistic_weight
+	attr_accessor :satisfaction_degree,:optimistic_weight,:pessimistic_weight, :moderately_optimistic_weight, :moderately_pessimistic_weight
 
 	belongs_to :project, autosave:true
 	belongs_to :metric, :class_name => 'Dataservice::Metric'
@@ -68,14 +68,16 @@ class Rattribute < ActiveRecord::Base
          	output = get_issues user, repo, project
         elsif self.metric.name == "Low priority improvement implementation ratio"
          	output = get_issues user, repo, project
+        elsif self.metric.name == "Improvement implementation ratio"
+         	output = get_issues user, repo, project
       	end
 
       	raw_file = RawFile.new :file=>output, :source=>"Github"
   		self.raw_file = raw_file
   		self.save
-  		logger.debug "Shawn"
-
 	end
+
+	
 
 	def get_issues user, repo, project
 		#logger.debug "https://api.github.com/search/issues?per_page=1000&q=label:"+label+"+user:"+user+"+repo:"+repo

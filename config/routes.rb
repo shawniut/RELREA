@@ -60,6 +60,7 @@ RELREA::Application.routes.draw do
     member do
         post 'index'
         post 'save'
+        post 'new_release'
     end
   end
   resources :mfunctions do

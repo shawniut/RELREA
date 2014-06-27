@@ -23,6 +23,7 @@ class DashboardController < ApplicationController
   def load_satisfaction_by_day
   	@Project = Project.find_by(:id=>params["id"])
   	@days = params["days"].to_i
+    @requested_rr = (params["requested_rr"]).to_f
 
     @series_name = params["series_name"]
     @release = Release.find_by(:id =>params["release_id"])

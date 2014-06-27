@@ -1,7 +1,75 @@
 
 <%# rattributes = @Project.get_attributes_with_owa_weights @Project.info.start_date, @Project.get_end_date @days %>
-<a class = "d-title-text"><%= @series_name%>-Weight Distribution-(day = <%=@days%>)</a>
+<a class = "d-title-text">Effets of RR on various decision strategies-(day = <%=@days%>)</a>
+
+<% average_data, optimistic_data, moderately_optimistic_data, pessimistic_data, moderately_pessimistic_data = get_all_series_data_with_various_decision_strategy @Project, @release %>	
+	<% decision_strategies_names = ["Optimistic", "Moderately Optimistic","Neutral","Moderately Pessimistic", "Pessimistic"] %>
+	<% decision_strategies_data = [optimistic_data, moderately_optimistic_data,average_data,moderately_pessimistic_data, pessimistic_data] %>
+
+<% @rattributes.sort_by { |e| e.satisfaction_degree } %>
+<%(0..decision_strategies_names.length-1).each do |i| %>
+	<%actual_rr=decision_strategies_data[i].select{ |u| u[0] == @days}[0] %>
+	
+
+	<table class = "db-table">
+		<tr>
+			<td align="middle" colspan="<%=@rattributes.length+4%>"><b><%=decision_strategies_names[i]%> Decision Strategy</b></td>
+		
+		</tr>
+		<tr>
+			<td ><b>RR Attributes</b></td>
+			<% @rattributes.each do |r| %>
+				<td align="middle"><b><%=r.metric.code%></b></td>
+			<%end%>
+				<td align="middle"><b>Req. RR</b></td>
+			<td align="middle"><b>Act. RR</b></td>
+			<td align="middle"><b>Diff.</b></td>
+		
+		</tr>
+		<tr>
+			<td ><b>Sat. deg</b></td>
+			<% @rattributes.each do |r| %>
+				<td align="middle"><%=r.satisfaction_degree.round(2)%></td>
+			<%end%>
+			<td align="middle"  rowspan="4"><b><%=@requested_rr%></b></td> 
+			<td align="middle"  rowspan="4"><b><%=actual_rr[1]%></b></td> 
+			<td align="middle"  rowspan="4"><b><%=(@requested_rr-actual_rr[1]).round(2)%></b></td> 
+		</tr>
+		<tr>
+			<td><b>Rel-W</b></td>
+			<% @rattributes.each do |r| %>
+				<td align="middle"><%=r.weight%></td>
+			<%end%>
+		</tr>
+			<td><b>OWA-W</b></td>
+			<% @rattributes.each do |r| %>
+				<%if decision_strategies_names[i] == "Optimistic" %>
+					<td align="middle"><%=r.optimistic_weight%></td>
+				<%elsif decision_strategies_names[i] == "Moderately Optimistic" %>
+					<td align="middle"><%=r.moderately_optimistic_weight%></td>
+				<%elsif decision_strategies_names[i] == "Neutral" %>
+					<td align="middle"><%=r.weight%></td>
+				<%elsif decision_strategies_names[i] == "Moderately Pessimistic" %>
+					<td align="middle"><%=r.moderately_pessimistic_weight%></td>
+				<%elsif decision_strategies_names[i] == "Pessimistic" %>
+					<td align="middle"><%=r.pessimistic_weight%></td>
+				<%end%>
+			<%end%>		
+	</table>
+
+<%end%>
+
+Data for : <%=@release.name%>
 <table class = "db-table">
+	<%average_data.each do |d|%>
+		<tr>
+			<td><%=d[0]%></td>
+			<td><%=d[1]%></td>
+		</tr>
+	<%end%>
+<table>
+
+<!-- <table class = "db-table">
 	<tr>
 		<th></th>
 		<th>Name</td>
@@ -34,4 +102,4 @@
 			<td align="center"><%=r.weight%></td>
 		</tr>
 	<% end %>
-</table>
+</table> -->

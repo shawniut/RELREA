@@ -6,20 +6,23 @@
 	<p class ="title-text" > Select Release:
 		<%=select_tag 'release_ids', options_for_select(@Project.releases.reverse.collect{ |r| [r.name, r.id] }),{:onchange => "loadDashboard(this)"}%>
 	</p>
+	<p class ="title-text"> Requested RR: <%=text_field :rr, :requested%>
+	</p>
 	<div id="readiness-over-time">
 	</div>
-	<div id="readiness-scores">
+	<div id = "weight-distribution">	
+	</div>
+	<!-- <div id="readiness-scores">
 		<p id = "cr-text">CR:</p>
 		<p id = "pr-text">PR:</p>
-	</div>
+	</div> -->
 	<div id = "attributes-satisfaction-level-container">
 		<div id="attributes-satisfaction-lavel">
 		</div>
 		<div id="attributes-satisfaction-over-time">
 		</div>
 	</div>
-	<div id = "weight-distribution">	
-	</div>
+	
 	
 	
 
@@ -32,26 +35,38 @@
 });
 
 $(function(){
+		<% average_data, optimistic_data, moderately_optimistic_data, pessimistic_data, moderately_pessimistic_data = get_all_series_data_with_various_decision_strategy @Project, @Release %>
+		
+		createReadinessOverTimeChart("readiness-over-time","Readiness Over Time");
 
-		createReadinessOverTimeChart("readiness-over-time", <%= get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>,
-			<%=@optimistic_data%>,<%=@pessimistic_data%>,"Readiness Over Time");
+		<% decision_strategies_names = ["Optimistic", "Moderately Optimistic","Neutral"," Moderately Pessimistic", "Pessimistic"] %>
+		<% decision_strategies_data = [optimistic_data, moderately_optimistic_data,average_data,moderately_pessimistic_data, pessimistic_data] %>
+		<%(0..decision_strategies_names.length-1).each do |i| %>
+			decisionStrategyChart.addSeries({
+							type: 'line',
+				            name: "<%=decision_strategies_names[i]%>",
+				            lineWidth: 1,            
+				            data:<%=decision_strategies_data[i]%>
+			});
+		<%end%>
+
 		<% if @Release.name == 'next'%>
-			$("#cr-text").html("CR: <%=@average_data[@average_data.length-1][1]%>");
-			$("#pr-text").html("PR: <%= (get_projected_series @average_data, (@Project.info.next_release_date-@Release.start_date).to_i)[1][1] %>");
+			$("#cr-text").html("CR: <%=average_data[average_data.length-1][1]%>");
+			$("#pr-text").html("PR: <%#= (get_projected_series average_data, (@Project.info.next_release_date-@Release.start_date).to_i)[1][1] %>");
 		<%else%>
-			$("#cr-text").html("CR: <%=@average_data[@average_data.length-1][1]%>");
+			$("#cr-text").html("CR: <%=average_data[average_data.length-1][1]%>");
 			$("#pr-text").html("PR: N/A");
 		<%end%>
 });
 
-function createReadinessOverTimeChart(container, average_data,optimistic_data,pessimistic_data, mf_title){
+function createReadinessOverTimeChart(container, title){
 	
-	chart = new Highcharts.Chart({
+	decisionStrategyChart = new Highcharts.Chart({
 		chart: {
-                renderTo: container,
+                renderTo: container
         },
 		title: {
-                text: mf_title,
+                text: title,
                 x: -20 //center
         },
 	    xAxis: {
@@ -70,22 +85,11 @@ function createReadinessOverTimeChart(container, average_data,optimistic_data,pe
 	        min:0
 	    },
 
-	    series: [{
-	    	name: 'Average',
-	        data:average_data  
-	    },{
-	    	name: 'Optimistic',
-	        data:optimistic_data  
-	    },{
-	    	name: 'Pessimistic',
-	        data:pessimistic_data  
-	    }],
-
 	    legend: {
             enabled:true    
         },
 
-         plotOptions: {
+        plotOptions: {
                 series: {
                     cursor: 'pointer',
                     point: {
@@ -97,7 +101,8 @@ function createReadinessOverTimeChart(container, average_data,optimistic_data,pe
                             		url: "/dashboard/"+<%=@Project.id%>+"/load_satisfaction_by_day",
                             		data: { days: e.point.x,
                             				series_name: this.series.name,
-                            				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value
+                            				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value,
+                            				requested_rr: document.getElementById("rr_requested").value
 
 
                             		 }
@@ -110,7 +115,7 @@ function createReadinessOverTimeChart(container, average_data,optimistic_data,pe
                         lineWidth: 1
                     }
                 }
-            },
+            }
 	});
 }
 

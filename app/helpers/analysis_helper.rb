@@ -56,26 +56,37 @@ module AnalysisHelper
 
 	def get_positive_negetive_chart overall_data, attribute_data, positive_series,negetive_series
 
-		# positive_series = []
-		# negetive_series = []
+		#positive_series = []
+		#negetive_series = []
 
 		i=0
 		overall_data.each do |p|
 			q = attribute_data[i]
 			
-
-			 if p[1] < q[1]
+			 if p[1] >= q[1]
+			 	negetive_series << [p[0],p[1],q[1]]
+			 	positive_series << [p[0],p[1],p[1]]
+			 elsif p[1] <= q[1]
 			 	positive_series << [p[0],q[1],p[1]]
 			 	negetive_series << [p[0],p[1],p[1]]
-
-			 elsif p[1] > q[1]
-			 	positive_series << [p[0],q[1],q[1]]
-			 	negetive_series << [p[0],p[1],q[1]]
+			 		
 			 end 
 
 			i+=1
 		end
 
+	end
+
+	def get_MMRE actual, predicted, k
+
+		total_error = 0.0
+
+		(0..predicted.length-2).each do |i|
+			a = actual[k+i]
+			p = predicted[i]
+			total_error += ((a[1]-p[1]).abs)/a[1]
+		end
+		return ((total_error/(predicted.length-2))*100).round(2)
 	end
 
 	def formate_date data, start_date

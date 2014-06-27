@@ -9,7 +9,7 @@
 	margin:5px;
 	padding: 10px;
 	margin-right:0px;
-	width: 60%;
+	width: 97%;
 	height:250px;
 	border:solid 1px #D8D8D8;
 	border-radius:5px;
@@ -66,11 +66,11 @@
 }
 
 #weight-distribution{
-	float:right;
+	float:left;
 	padding: 10px;
-	margin-top:5px;
-	width: 33%;
-	height:480px;
+	margin-left:5px;
+	width: 97%;
+	//height:480px;
 	border:solid 1px #D8D8D8;
 	border-radius:5px;
 	background-color: #FAFAFA;
@@ -78,8 +78,8 @@
 }
 #attributes-satisfaction-level-container{
 	float:left;
-	width: 60%;
-	height:450px;
+	width: 97%;
+	height:550px;
 
 }
 #attributes-satisfaction-lavel{
@@ -126,5 +126,5 @@
 .db-table td{
 	border:solid 1px #1E75B3;
 	padding-left: 5px;
-	height: 40px;
+	height: 18px;
 }

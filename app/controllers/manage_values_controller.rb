@@ -25,6 +25,7 @@ class ManageValuesController < ApplicationController
 
     metric_id = params["metric_id"]
 
+    release = Release.find_by(:id=>params[:release_id])
 
     interval = params[:project][:interval].to_i
     end_date = start_date + interval.days
@@ -38,7 +39,7 @@ class ManageValuesController < ApplicationController
         # r.value = random.rand(10..50).to_f
        # if r.values.where(:end_date=>end_date).any? == false
         
-          git_metric_value = get_git_metric_value  @Project.repo,  @Project.user, start_date, end_date, r,@Project
+          git_metric_value = get_git_metric_value  @Project.repo,  @Project.user, start_date, end_date, r,@Project, release
           value = Value.new(:mvalue=> git_metric_value, :start_date => start_date, :end_date => end_date)
           r.save_value(value)
             count +=1

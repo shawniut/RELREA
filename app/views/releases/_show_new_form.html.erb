@@ -1,0 +1,19 @@
+	<div class='form'>
+	<%=form_tag({controller: "/releases", action: "new_release", id:@Project.id}, remote: true, method: "POST")%>
+		
+		<p><b>Add a new release:</b></p>
+		<p> Release
+			<%= text_field(:release,:name, :size=>15) %>
+			from
+			<%= date_field(:release, :start_date,:value => Time.now.to_date, :readonly => false, :size=>15)%> 
+		
+			to
+			<%= date_field(:release, :end_date,:value => Time.now.to_date, :readonly => false, :size=>15)%> 
+		</p>
+			
+		<p>
+			<p align="left"><%= submit_tag("Add New Release") %></p>
+		</p>
+		<p id = 'successful'></p>
+	</div>
+	

@@ -6,12 +6,13 @@ class AnalysisController < ApplicationController
     @pessimistic_data = []
 
     if params["release_id"] == nil
-      @Release =  @Project.releases.where(:name=>'next')[0]
+      @Releases =  @Project.releases.where(:name=>'next')
       @selected_index = 0
       @moving_average_index = 0
       @moving_average_order = 3
     else
-      @Release =  Release.find_by(:id =>params["release_id"])
+      release_id = params["release_id"].to_i
+      @Releases =  release_id!=0 ? Release.where(:id =>release_id) : @Project.releases
       @selected_index = params["selected_index"]
     end
     if params["moving_average_selected_index"] != nil

@@ -24,11 +24,14 @@ module ReadinessHelper
 
 	def set_owa_weights rattributes
 
-		rattributes = rattributes.sort!{|r1,r2| r2.satisfaction_degree <=> r1.satisfaction_degree}
+		rattributes = rattributes.sort!{|r1,r2| [r2.satisfaction_degree,r2.weight] <=> [r1.satisfaction_degree, r1.weight]}
 		total_weight = get_total_weight rattributes
 		
-		pessimistic_alpha = 3
-		optimistic_alpha = 0.5
+		pessimistic_alpha = 4
+		moderately_pessimistic_alpha = 2	
+		moderately_optimistic_alpha = 0.6
+		optimistic_alpha = 0.3
+
 
 		i = 1
 		rattributes.each do |r|
@@ -36,6 +39,24 @@ module ReadinessHelper
 			a = (get_weight_upto_i rattributes, i / total_weight)**pessimistic_alpha
 			b = (get_weight_upto_i rattributes, (i-1) / total_weight)**pessimistic_alpha
 			r.pessimistic_weight = (a-b).round(3) 
+			i +=1
+		end	
+
+		i = 1
+		rattributes.each do |r|
+			#this equation comes from the AHP paper of wager
+			a = (get_weight_upto_i rattributes, i / total_weight)**moderately_pessimistic_alpha
+			b = (get_weight_upto_i rattributes, (i-1) / total_weight)**moderately_pessimistic_alpha
+			r.moderately_pessimistic_weight = (a-b).round(3) 
+			i +=1
+		end	
+
+		i = 1
+		rattributes.each do |r|
+			#this equation comes from the AHP paper of wager
+			a = (get_weight_upto_i rattributes, i / total_weight)**moderately_optimistic_alpha
+			b = (get_weight_upto_i rattributes, (i-1) / total_weight)**moderately_optimistic_alpha
+			r.moderately_optimistic_weight = (a-b).round(3)  
 			i +=1
 		end	
 
