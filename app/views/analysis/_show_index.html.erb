@@ -9,6 +9,8 @@
 		<%=select_tag 'release_ids', options_for_select(releases),{:onchange => "loadDashboard(this)"}%>
 		Moving average Order:
 		<%=select_tag 'moving_average_ids', options_for_select([[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8]] ),{:onchange => "loadDashboard(this)"}%>
+		Analysis Type:
+		<%=select_tag 'analysis_type_ids', options_for_select([["Impact on Overall RR",1],["Attribute Over time",2]]),{:onchange => "loadDashboard(this)"}%>
 </p>
 <div id="readiness-analysis">
 
@@ -39,6 +41,8 @@
 
 	document.getElementById("release_ids").selectedIndex = <%=@selected_index.to_i%>;
 	document.getElementById("moving_average_ids").selectedIndex = <%= @moving_average_index.to_i%>;
+	document.getElementById("analysis_type_ids").selectedIndex = <%= @analysis_type_index.to_i%>;
+
 });
 
 $(function(){
@@ -70,14 +74,14 @@ $(function(){
 			            data:<%=@average_data%>
 			});
 
-			dashboart_chart.addSeries({
-						type: 'line',
-						yAxis:3,
-			            name: "<%=release.name%>: Moving Average",
-			            color:'blue',
-			            lineWidth: 2,            
-			            data:<%=moving_average_series_data%>
-			});
+			// dashboart_chart.addSeries({
+			// 			type: 'line',
+			// 			yAxis:3,
+			//             name: "<%=release.name%>: Moving Average",
+			//             color:'blue',
+			//             lineWidth: 2,            
+			//             data:<%=moving_average_series_data%>
+			// });
 
 			// dashboart_chart.addSeries({
 			// 			type: 'line',
@@ -89,8 +93,11 @@ $(function(){
 			// });
 			
 			<%logger.debug "MRE for #{release.name}  #{get_MMRE @average_data, overall_moving_average,@moving_average_order}"%>
-			<%i=4%>
-			<%top=350%>
+			<%i=3%>
+			<%color_index=0%>
+			<%top=260%>
+			<%colors = ['#FF3300','#3333FF','#000099', '#663300','#0000FF','#E819E8','#FF6666','#9900FF']%>
+
 			<%@Project.rattributes.each do |ra| %>
 					
 					<% attribute_satisfaction_data =  ra.get_satisfaction_over_time @Project, release%>
@@ -98,47 +105,50 @@ $(function(){
 					<%negetive_series = []%>
 					<% get_positive_negetive_chart @average_data, attribute_satisfaction_data, positive_series, negetive_series %>
 
-				
-					dashboart_chart.addSeries({
-						type: 'arearange',
-						yAxis:<%=i%>,
-			            name: "<%=release.name%>: <%= ra.metric.code%>",
-			            color:'rgba(0, 153, 76, 0.3)',
-			            lineWidth: 1,            
-			            //dashStyle:'ShortDash',
-			            enableMouseTracking: false,
-			            data:<%= positive_series.to_json%>
-			        });
-			        dashboart_chart.addSeries({
-						type: 'arearange',
-						yAxis:<%=i%>,
-			            name: "<%=release.name%>: <%= ra.metric.code%>",
-			            color:'rgba(255, 51, 51, 0.3)',
-			            lineWidth: 1,
-			            //dashStyle:'ShortDash',
-			            enableMouseTracking: false,
-			            data:<%= negetive_series.to_json%>
-			        });
-			         dashboart_chart.addSeries({
-						type: 'line',
-						yAxis:<%=i%>,
-			            name: "<%=release.name%>: <%= ra.metric.code%>",
-			            //color:'blue',
-			            lineWidth: 2,
-			            data:<%= formate_date attribute_satisfaction_data, release.start_date%>
-			        });
-			         dashboart_chart.addSeries({
-						type: 'line',
-						yAxis:<%=i%>,
-			            name: "<%=release.name%>: <%= ra.metric.code%>",
-			            color:'black',
-			            lineWidth: 2,
-			            enableMouseTracking: false,
-			            data:<%= @average_data%>
-			        });
-
+					<%if @analysis_type == 1 %>
+						dashboart_chart.addSeries({
+							type: 'arearange',
+							yAxis:<%=i%>,
+				            name: "<%=release.name%>: <%= ra.metric.code%>",
+				            color:'rgba(0, 153, 76, 0.3)',
+				            lineWidth: 1,            
+				            //dashStyle:'ShortDash',
+				            enableMouseTracking: false,
+				            data:<%= positive_series.to_json%>
+				        });
+				        dashboart_chart.addSeries({
+							type: 'arearange',
+							yAxis:<%=i%>,
+				            name: "<%=release.name%>: <%= ra.metric.code%>",
+				            color:'rgba(255, 51, 51, 0.3)',
+				            lineWidth: 1,
+				            //dashStyle:'ShortDash',
+				            enableMouseTracking: false,
+				            data:<%= negetive_series.to_json%>
+				        });
+			        
+			        <% elsif @analysis_type == 2 %>
+				         dashboart_chart.addSeries({
+							type: 'area',
+							yAxis:<%=i%>,
+				            name: "<%=release.name%>: <%= ra.metric.code%>",
+				            color:"<%=colors[color_index]%>",
+				            lineWidth: 2,
+				            data:<%= formate_date attribute_satisfaction_data, release.start_date%>
+				        });
+				   //       dashboart_chart.addSeries({
+							// type: 'line',
+							// yAxis:<%=i%>,
+				   //          name: "<%=release.name%>: <%= ra.metric.code%>",
+				   //          color:'black',
+				   //          lineWidth: 2,
+				   //          enableMouseTracking: false,
+				   //          data:<%= @average_data%>
+				   //      });
+			       <%end%>
 			    <%top+=60%>
 		        <%i +=1%>
+		        <%color_index += 1%>
 			       
 			<%end%>
 
@@ -163,24 +173,24 @@ function createAxises(){
 		        	plotBands: getAttributePlotBands()
 		        });
 		
-		dashboart_chart.addAxis({
-					title: {
-                    	text:"Moving Average"
-                	},
-	                top:235,
-	                height:90,
-	                offset: 0,
-		        	max: 1,
-		        	min:0,
-		        	gridLineWidth: 0,
-		        	tickInterval:0.5,
-		        	opposite: false,
-		        	plotBands: getAttributePlotBands()
-		        });
+		// dashboart_chart.addAxis({
+		// 			title: {
+  //                   	text:"Moving Average"
+  //               	},
+	 //                top:235,
+	 //                height:90,
+	 //                offset: 0,
+		//         	max: 1,
+		//         	min:0,
+		//         	gridLineWidth: 0,
+		//         	tickInterval:0.5,
+		//         	opposite: false,
+		//         	plotBands: getAttributePlotBands()
+		//         });
 
 
 		<%i=4%>
-		<%top=350%>
+		<%top=260%>
 		<%@Project.rattributes.each do |ra| %>
 				dashboart_chart.addAxis({
 					title: {
@@ -281,7 +291,8 @@ function createReadinessWithMovingAverage(container,chart_title, t_interval){
 	    	},
 			legend: {
             	//enabled:true    
-        	},
+        	}
+        	
 		});
 	// chart = new Highcharts.Chart('StockChart',{
 	// 	chart: {
@@ -373,7 +384,8 @@ function loadDashboard(release_ids){
                     release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value,
                     moving_average_id: document.getElementById("moving_average_ids").options[document.getElementById("moving_average_ids").selectedIndex].value,
                     selected_index : document.getElementById("release_ids").selectedIndex,
-                    moving_average_selected_index : document.getElementById("moving_average_ids").selectedIndex
+                    moving_average_selected_index : document.getElementById("moving_average_ids").selectedIndex,
+                    analysis_type_id:document.getElementById("analysis_type_ids").options[document.getElementById("analysis_type_ids").selectedIndex].value
             }
     });
 }
