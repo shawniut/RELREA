@@ -31,6 +31,10 @@ class Rattribute < ActiveRecord::Base
 		return nil
 	end
 
+	def get_sat_degree v
+		get_satisfaction_degree self.mfunction.parameter, v.mvalue, self.mfunction.name
+	end
+
 	def get_satisfaction_over_time project, release
 		
 		data = []

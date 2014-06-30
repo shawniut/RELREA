@@ -17,6 +17,7 @@
 							<th>To</th>
 							<th>Interval(days)</th>
 							<th>Value</th>
+							<th>Degree of Sat.</th>
 							<th>Release</th>
 						</tr>
 						<%if r.values != nil%>
@@ -28,6 +29,9 @@
 								<td>	<%=v.end_date %> </td>
 								<td>	<%=(v.end_date - v.start_date).to_i %> </td>
 								<td>	<%=v.mvalue %> </td>
+								<%if r.mfunction !=nil %> 
+									<td>	<%=(r.get_sat_degree v).round(2) %></td>
+								<%end%>
 								<td>	<%=@releases.where(:start_date => v.start_date)[0].name %> </td>
 								
 							</tr>
