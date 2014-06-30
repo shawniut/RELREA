@@ -35,12 +35,23 @@ class AnalysisController < ApplicationController
 
   def load_attribute_satisfaction
   	@Project = Project.find_by(:id=>params["id"])
-  	@days = params["days"].to_i
 
-  	@moving_average_data = params['moving_average_data']
+    @average_data = []
+    @optimistic_data = []
+    @pessimistic_data = []
+
+
 
     @series_name = params["series_name"]
     @release = Release.find_by(:id =>params["release_id"])
+
+    if params["release_id"] == "0"
+       @release = @Project.releases.where(:name=>'next')[0]
+    end
+
+    @days = (params["days"].to_date - @release.start_date ).to_i
+
+  	@moving_average_data = []
 
     @moving_average_order =  params["moving_average_id"].to_i
     @interval = params["interval"].to_i

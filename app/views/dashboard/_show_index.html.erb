@@ -6,9 +6,13 @@
 	<p class ="title-text" > Select Release:
 		<%=select_tag 'release_ids', options_for_select(@Project.releases.reverse.collect{ |r| [r.name, r.id] }),{:onchange => "loadDashboard(this)"}%>
 	</p>
-	<p class ="title-text"> Requested RR: <%=text_field :rr, :requested%>
+	<p class ="title-text"> Requested RR: <%=text_field :rr, :requested, :value=>1%>
 	</p>
 	<div id="readiness-over-time">
+	</div>
+	<div id = "decision-strategy-summary">	
+	</div>
+	<div id="attributes-satisfaction-lavel">
 	</div>
 	<div id = "weight-distribution">	
 	</div>
@@ -17,8 +21,7 @@
 		<p id = "pr-text">PR:</p>
 	</div> -->
 	<div id = "attributes-satisfaction-level-container">
-		<div id="attributes-satisfaction-lavel">
-		</div>
+		
 		<div id="attributes-satisfaction-over-time">
 		</div>
 	</div>

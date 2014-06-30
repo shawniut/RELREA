@@ -16,17 +16,19 @@
 
 </div>
 
-<div id="bottlenec-analysis">
+<div id="attribute-analysis">
 
 </div>
+
+<!-- <div id="bottlenec-analysis">
+
+</div> -->
 
 <div id="impact-of-RR-attributes">
 
 </div>
 
-<div id="attribute-analysis">
 
-</div>
 
 <%# get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @Release %>
 
@@ -58,41 +60,39 @@ $(function(){
 			<%attribute_satisfaction_data = []%>
 			<%positive_series = []%>
 			<%negetive_series = []%>
-
-			<% overall_moving_average = formate_date (get_overall_moving_average @Project, release, @moving_average_order), (release.start_date +  (@moving_average_order*7).to_i.days)%>
 			
 			<% get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, release %>
 			<%@average_data = formate_date @average_data, release.start_date %>
 			<% moving_average_series_data =get_moving_average_series @average_data,  @moving_average_order%>
 			
+
 			dashboart_chart.addSeries({
 						type: 'line',
 						yAxis:2,
 			            name: "<%=release.name%>: Actual Readiness",
 			            color:'green',
-			            lineWidth: 2,            
+			            lineWidth: 2,
+			            marker : {
+							enabled : true,
+							radius : 3
+						},            
 			            data:<%=@average_data%>
 			});
 
-			// dashboart_chart.addSeries({
-			// 			type: 'line',
-			// 			yAxis:3,
-			//             name: "<%=release.name%>: Moving Average",
-			//             color:'blue',
-			//             lineWidth: 2,            
-			//             data:<%=moving_average_series_data%>
-			// });
-
-			// dashboart_chart.addSeries({
-			// 			type: 'line',
-			// 			yAxis:2,
-			//             name: "<%=release.name%>: Overall Moving Average",
-			//             color:'red',
-			//             lineWidth: 2,            
-			//             data:<%=overall_moving_average%>
-			// });
+			dashboart_chart.addSeries({
+						type: 'line',
+						yAxis:2,
+			            name: "<%=release.name%>: Projected Readiness",
+			            color:'red',
+			            lineWidth: 2,
+			            marker : {
+							enabled : true,
+							radius : 3
+						},            
+			            data:<%=moving_average_series_data%>
+			});
 			
-			<%logger.debug "MRE for #{release.name}  #{get_MMRE @average_data, overall_moving_average,@moving_average_order}"%>
+			
 			<%i=3%>
 			<%color_index=0%>
 			<%top=260%>
@@ -134,6 +134,10 @@ $(function(){
 				            name: "<%=release.name%>: <%= ra.metric.code%>",
 				            color:"<%=colors[color_index]%>",
 				            lineWidth: 2,
+				            marker : {
+								enabled : true,
+								radius : 2
+							},
 				            data:<%= formate_date attribute_satisfaction_data, release.start_date%>
 				        });
 				   //       dashboart_chart.addSeries({
@@ -154,8 +158,11 @@ $(function(){
 
 		<%end%>
 
-		
+		dashboart_chart.rangeSelector.buttons[5].setState(2);
+ 		dashboart_chart.rangeSelector.clickButton(5,5,true);
 });
+
+
 
 function createAxises(){
 		dashboart_chart.addAxis({
@@ -267,14 +274,12 @@ function check_deviation_with_average_series(readiness_data, attribute_data, k){
 }
 
 
-
-
 function createReadinessWithMovingAverage(container,chart_title, t_interval){
 	dashboart_chart = new Highcharts.StockChart( {
 			chart: {
                 renderTo: container,
                 alignTicks: true,
-                height:850,
+                height:800,
 
             },
 			rangeSelector : {
@@ -291,7 +296,34 @@ function createReadinessWithMovingAverage(container,chart_title, t_interval){
 	    	},
 			legend: {
             	//enabled:true    
-        	}
+        	},
+        	plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function (e) {
+                            	//alert("I am here"+ Highcharts.dateFormat('%Y-%m-%d', e.point.x));
+                            	$.ajax({
+                            		type: "POST",
+                            		url: "/analysis/"+<%=@Project.id%>+"/load_attribute_satisfaction",
+                            		data: { days: Highcharts.dateFormat('%Y-%m-%d', e.point.x),
+                            				series_name: this.series.name,
+                            				release_id: document.getElementById("release_ids").options[document.getElementById("release_ids").selectedIndex].value,
+                            				moving_average_id: document.getElementById("moving_average_ids").options[document.getElementById("moving_average_ids").selectedIndex].value,
+                            				interval:t_interval
+                       
+                            		 }
+                            	});
+                               
+                            }
+                        }
+                    },
+                    marker: {
+                        lineWidth: 1
+                    }
+                }
+            }
         	
 		});
 	// chart = new Highcharts.Chart('StockChart',{

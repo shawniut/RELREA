@@ -7,6 +7,9 @@
 	<% decision_strategies_data = [optimistic_data, moderately_optimistic_data,average_data,moderately_pessimistic_data, pessimistic_data] %>
 
 <% @rattributes.sort_by { |e| e.satisfaction_degree } %>
+<% actual_rr_data = []%>
+<% below_expectation_data = [] %>
+
 <%(0..decision_strategies_names.length-1).each do |i| %>
 	<%actual_rr=decision_strategies_data[i].select{ |u| u[0] == @days}[0] %>
 	
@@ -33,7 +36,9 @@
 			<%end%>
 			<td align="middle"  rowspan="4"><b><%=@requested_rr%></b></td> 
 			<td align="middle"  rowspan="4"><b><%=actual_rr[1]%></b></td> 
+			<% actual_rr_data << actual_rr[1] %>
 			<td align="middle"  rowspan="4"><b><%=(@requested_rr-actual_rr[1]).round(2)%></b></td> 
+			<% below_expectation_data << (@requested_rr-actual_rr[1]).round(2) %>
 		</tr>
 		<tr>
 			<td><b>Rel-W</b></td>
@@ -67,8 +72,56 @@ Data for : <%=@release.name%>
 			<td><%=d[1]%></td>
 		</tr>
 	<%end%>
-<table>
+</table>
 
+<script type="text/javascript">
+
+$(function(){
+
+	createDecisionStrategySummaryChart("decision-strategy-summary","Impact of various decision strategies at t = <%=@days%>");
+});
+
+function createDecisionStrategySummaryChart(container,chart_title){
+	decisionStrategyChart = new Highcharts.Chart( {
+			chart: {
+                renderTo: container,
+                type: 'bar'
+            },		
+
+			title : {
+				text : chart_title
+			}, xAxis: {
+                categories: <%= raw decision_strategies_names%>
+            },
+            yAxis: {
+                min: 0,
+                max:1,
+                title: {
+                    text: 'Release Readiness'
+                }
+            },
+            legend: {
+                reversed: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+
+            series: [ {
+                name: 'Below Expectation',
+                color: "#FA5858",
+                data: <%=below_expectation_data%>
+            },{
+                name: 'Actual Readiness',
+                color: "#3A974C",
+                data: <%=actual_rr_data%>
+            }]
+        	
+		});
+	}
+</script>
 <!-- <table class = "db-table">
 	<tr>
 		<th></th>

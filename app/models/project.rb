@@ -13,6 +13,7 @@ class Project < ActiveRecord::Base
 	def get_attributes_with_owa_weights start_date, end_date
 		rattributes = self.rattributes
 		#setting the satisfaction degree to the readiness attributes
+
 		rattributes.each do |r|
 			metric_value = r.values.where(:start_date => start_date, :end_date=> end_date)[0].mvalue
 			satisfaction_degree =  get_satisfaction_degree r.mfunction.parameter, metric_value, r.mfunction.name
@@ -45,7 +46,7 @@ class Project < ActiveRecord::Base
 		start_date = self.info.start_date
 		data = []
 		self.rattributes.each do |r|
-			data << r.metric.name
+			data << r.metric.name + "(#{r.metric.code})"
 		end
 		return data
 	end

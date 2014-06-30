@@ -32,7 +32,7 @@ module DashboardHelper
 		
 		#logger.debug average_data
 
-		return average_data.to_json
+		return average_data
 
 	end
 
