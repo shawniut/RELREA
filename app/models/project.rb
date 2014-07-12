@@ -122,7 +122,7 @@ class Project < ActiveRecord::Base
 
 	def find_release(release)
 		self.releases.each do|r|
-			if r.date == release.date
+			if r.date == release.date and r.start_date == release.start_date
 				return r
 			end
 		end

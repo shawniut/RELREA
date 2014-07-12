@@ -23,11 +23,13 @@ class ReleasesController < ApplicationController
     @Project = Project.find_by(:id => params["id"])
     #@Project.releases << release
     #@Project.save
-    status =  @Project.save_release release
+    
 
-    if status == true
+    if (@Project.save_release release) == true
+        logger.debug "i am here"
        flash[:notice] = 'Releases added successfully!!'
     else
+      logger.debug "i am here 2"
        flash[:notice] = 'Release exists with the provided start date and end date!!'
     end
     respond_to do |format|
