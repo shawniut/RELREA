@@ -6,7 +6,7 @@ class DashboardController < ApplicationController
     @pessimistic_data = []
 
     if params["release_id"] == nil
-      @Release =  @Project.releases.where(:name=>'next')[0]
+      @Release =  @Project.releases[0]
       @selected_index = 0
     else
       @Release =  Release.find_by(:id =>params["release_id"])

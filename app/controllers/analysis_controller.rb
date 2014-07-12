@@ -6,7 +6,7 @@ class AnalysisController < ApplicationController
     @pessimistic_data = []
 
     if params["release_id"] == nil
-      @Releases =  @Project.releases.where(:name=>'next')
+      @Releases =  @Project.releases
       @selected_index = 0
       @moving_average_index = 0
       @moving_average_order = 3
@@ -46,7 +46,7 @@ class AnalysisController < ApplicationController
     @release = Release.find_by(:id =>params["release_id"])
 
     if params["release_id"] == "0"
-       @release = @Project.releases.where(:name=>'next')[0]
+       @release = @Project.releases[0]
     end
 
     @days = (params["days"].to_date - @release.start_date ).to_i
