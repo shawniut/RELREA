@@ -112,10 +112,11 @@ class Project < ActiveRecord::Base
 	    r.date = release.date
 	    r.start_date = release.start_date
 	    r.save
+	    return false
 	  else
 	    self.releases << release
 	    self.save
-	    
+	    return true
 	  end
 	end
 

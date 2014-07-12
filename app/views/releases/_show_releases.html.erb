@@ -16,6 +16,7 @@
 					<td><input type="text", name = "<%=i%>_start_date" value = "<%=r.start_date%>"></td>
 					<td><input type="text", name = "<%=i%>" value = "<%=r.date%>"></td>
 					<td><%=(r.date-r.start_date).to_i%> days</td>
+					<td><%=link_to "Delete",  {:controller => "/releases", :action=> "delete_release", :id => r.id, :project_id=>@Project.id},:method=>"POST", :remote=>"true" %></td>
 				</tr>
 				<% i+=1%>
 			<%end%>
