@@ -101,6 +101,8 @@ class Project < ActiveRecord::Base
 
 	end
 
+
+
 	def get_release_info 
 		get_releases self.user, self.repo, self
 	end
