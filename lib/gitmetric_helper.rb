@@ -82,7 +82,7 @@ module GitmetricHelper
         elsif label == 'II'
           return 16
         end
-      elsif release.name == 'next'
+      elsif release.name == 'Milestone 2'
         #logger.debug "*******************"
         if label == 'FH'
           return 12
@@ -90,6 +90,15 @@ module GitmetricHelper
           return 2
         elsif label == 'II'
           return 12
+        end
+       elsif release.name == 'RP 2.0'
+        #logger.debug "*******************"
+        if label == 'FH'
+          return 23
+        elsif label == 'FL'
+          return 5
+        elsif label == 'II'
+          return 28
         end
       end
 
