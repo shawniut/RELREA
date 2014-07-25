@@ -92,7 +92,7 @@ module GitmetricHelper
           return 12
         end
        elsif release.name == 'RP 2.0'
-        #logger.debug "*******************"
+        logger.debug "*******************888888888888888888888888888888888888888888888888888888888888888888888888"
         if label == 'FH'
           return 23
         elsif label == 'FL'
@@ -111,12 +111,12 @@ module GitmetricHelper
      
       issues["items"].each do |i|
        created_at = i["created_at"].to_date
-        if created_at >=(end_date-30.days) and created_at <= end_date
+        if created_at >=(end_date-21.days) and created_at <= end_date
            total_count+=1
         end
       end
 
-  		dfr = (total_count.to_f/30.0)
+  		dfr = (total_count.to_f/21.0)
   		
   		return dfr.round(2)
 
@@ -131,12 +131,12 @@ module GitmetricHelper
         created_at = issue['fields']['created'].to_date
         issue_type = issue['fields']['issuetype']['name']
         state = issue['fields']['status']['name'] 
-        if created_at >=(end_date-30.days) and created_at <= end_date
+        if created_at >=(end_date-21.days) and created_at <= end_date
            total_count+=1
         end
       end
 
-      dfr = (total_count.to_f/30.0)
+      dfr = (total_count.to_f/21.0)
       
       return dfr.round(2)
     end
@@ -168,13 +168,13 @@ module GitmetricHelper
        total_count = 0
        issues["items"].each do |i|
          updated_at = i["updated_at"].to_date
-        if updated_at >=(end_date-30.days) and updated_at <= end_date and i["state"]=="closed"
+        if updated_at >=(end_date-21.days) and updated_at <= end_date and i["state"]=="closed"
            total_count+=1
         end
       end
 
   		days = (end_date-start_date).to_i
-  		bfr = (total_count.to_f/30.0)
+  		bfr = (total_count.to_f/21.0)
   		
   		return bfr.round(2)
 
@@ -188,13 +188,13 @@ module GitmetricHelper
           updated_at = issue['fields']['updated'].to_date
           issue_type = issue['fields']['issuetype']['name']
           state = issue['fields']['status']['name'] 
-          if updated_at >=(end_date-30.days) and updated_at <= end_date
+          if updated_at >=(end_date-21.days) and updated_at <= end_date
              total_count+=1
           end
       end
 
       days = (end_date-start_date).to_i
-      bfr = (total_count.to_f/30.0)
+      bfr = (total_count.to_f/21.0)
       
       return bfr.round(2)
 
@@ -292,7 +292,7 @@ module GitmetricHelper
   		addition_deletion_count=0.0
   		data.reverse.each do |w|
   			date = Time.at(w[0]).to_date
-  			if date >=(end_date-30.days) and date <= end_date
+  			if date >=(end_date-21.days) and date <= end_date
   				addition_deletion_count+=w[1].to_f
   				addition_deletion_count-=w[2].to_f
   				count+=1
@@ -300,7 +300,7 @@ module GitmetricHelper
 
   		end
 
-  		return (addition_deletion_count/30).round(2)
+  		return (addition_deletion_count/21).round(2)
   	end
 
     def get_releases user, repo, project

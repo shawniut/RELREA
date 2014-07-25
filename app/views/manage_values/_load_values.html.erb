@@ -18,7 +18,7 @@
 		<%= text_field(:project, :start_date, :value => @Project.releases.reverse[0].start_date, :readonly => true, :size=>15) %>
 
 		<%= label_tag(:today, "to end_date:") %>
-		<%= text_field(:project, :end_date,:value => Time.now.to_date, :readonly => true, :size=>15) %>
+		<%= text_field(:project, :end_date,:value => @Project.releases.reverse[0].date, :readonly => true, :size=>15) %>
 		<%= label_tag(:interval, "with interval of:") %>
 		<%= text_field(:project,:interval, :size=>3, :value=>7) %> days
 		<%= submit_tag("Load Values") %>
