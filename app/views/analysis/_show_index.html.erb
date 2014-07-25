@@ -10,8 +10,22 @@
 		Moving average Order:
 		<%=select_tag 'moving_average_ids', options_for_select([[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8]] ),{:onchange => "loadDashboard(this)"}%>
 		Analysis Type:
-		<%=select_tag 'analysis_type_ids', options_for_select([["Impact on Overall RR",1],["Attribute Over time",2]]),{:onchange => "loadDashboard(this)"}%>
+		<%=select_tag 'analysis_type_ids', options_for_select([["Impact on Overall RR",1],["Attribute Over time",2], ["Projection of RR",3], ["Moving Average",4]]),{:onchange => "loadDashboard(this)"}%>
 </p>
+
+<%if @analysis_type == 3 %>
+	<p class ="title-text" >
+		<%= label_tag(:level, "Level Constant:") %>
+		<%= text_field(:projection,:level, :size=>3, :value=>0.8) %>
+		<%= label_tag(:level, "Trend Constant:") %>
+		<%= text_field(:projection,:trend, :size=>3, :value=>0.2) %>
+		<%= label_tag(:level, "Projection Step:") %>
+		<%= text_field(:projection,:step, :size=>3, :value=>1) %>
+		<%= submit_tag("Update", :id=>'pr_update', :onclick => "loadDashboard(this)") %>
+	<p>
+
+<%end%>
+
 <div id="readiness-analysis">
 
 </div>
@@ -62,9 +76,10 @@ $(function(){
 			<%negetive_series = []%>
 			
 			<% get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, release %>
+			<%projected_RR_series = get_projected_RR_series @average_data, @level, @trend, @step, 0, 0 %>
 			<%@average_data = formate_date @average_data, release.start_date %>
 			<% moving_average_series_data =get_moving_average_series @average_data,  @moving_average_order%>
-			
+			<%projected_RR_series = formate_date projected_RR_series, (release.start_date + 7.days) %>
 
 			dashboart_chart.addSeries({
 						type: 'line',
@@ -79,6 +94,23 @@ $(function(){
 			            data:<%=@average_data%>
 			});
 
+			<%if @analysis_type == 3 %>
+			set_projection_parameter();
+			
+			
+				dashboart_chart.addSeries({
+							type: 'line',
+							yAxis:2,
+				            name: "<%=release.name%>: Projected Readiness",
+				            color:'red',
+				            lineWidth: 2,
+				            marker : {
+								enabled : true,
+								radius : 3
+							},            
+				            data:<%=projected_RR_series%>
+				});
+			<%elsif  @analysis_type == 4 %>
 			dashboart_chart.addSeries({
 						type: 'line',
 						yAxis:2,
@@ -91,7 +123,8 @@ $(function(){
 						},            
 			            data:<%=moving_average_series_data%>
 			});
-			
+
+			<%end%>
 			
 			<%i=3%>
 			<%color_index=0%>
@@ -105,7 +138,7 @@ $(function(){
 					<%negetive_series = []%>
 					<% get_positive_negetive_chart @average_data, attribute_satisfaction_data, positive_series, negetive_series %>
 
-					<%if @analysis_type == 1 %>
+					<%if @analysis_type == 1 or @analysis_type != 2 %>
 						dashboart_chart.addSeries({
 							type: 'arearange',
 							yAxis:<%=i%>,
@@ -127,7 +160,7 @@ $(function(){
 				            data:<%= negetive_series.to_json%>
 				        });
 			        
-			        <% elsif @analysis_type == 2 %>
+			        <% elsif @analysis_type == 2 or @analysis_type != 1%>
 				         dashboart_chart.addSeries({
 							type: 'area',
 							yAxis:<%=i%>,
@@ -163,14 +196,19 @@ $(function(){
 });
 
 
-
+function set_projection_parameter()
+{
+	document.getElementById("projection_level").value = <%=@level%>;
+	document.getElementById("projection_trend").value =  <%=@trend%>;
+	document.getElementById("projection_step").value = <%=@step%>;
+}
 function createAxises(){
 		dashboart_chart.addAxis({
 					title: {
                     	text:"Overall Readiness"
                 	},
-	                top:120,
-	                height:100,
+	                top:150,
+	                height:130,
 	                offset: 0,
 		        	max: 1,
 		        	min:0,
@@ -197,7 +235,7 @@ function createAxises(){
 
 
 		<%i=4%>
-		<%top=260%>
+		<%top=300%>
 		<%@Project.rattributes.each do |ra| %>
 				dashboart_chart.addAxis({
 					title: {
@@ -408,7 +446,16 @@ function createReadinessWithMovingAverage(container,chart_title, t_interval){
  
 }
 
-function loadDashboard(release_ids){
+function loadDashboard(element){
+	p_level = 0;
+	p_trend = 0;
+	p_step = 0;
+
+	if(element.id == 'pr_update' ){
+		p_level = document.getElementById("projection_level").value;
+		p_trend = document.getElementById("projection_trend").value;
+		p_step = document.getElementById("projection_step").value;
+	}
 	$.ajax({
             type: "POST",
             url: "/analysis/"+<%=@Project.id%>+"/index",
@@ -417,7 +464,10 @@ function loadDashboard(release_ids){
                     moving_average_id: document.getElementById("moving_average_ids").options[document.getElementById("moving_average_ids").selectedIndex].value,
                     selected_index : document.getElementById("release_ids").selectedIndex,
                     moving_average_selected_index : document.getElementById("moving_average_ids").selectedIndex,
-                    analysis_type_id:document.getElementById("analysis_type_ids").options[document.getElementById("analysis_type_ids").selectedIndex].value
+                    analysis_type_id:document.getElementById("analysis_type_ids").options[document.getElementById("analysis_type_ids").selectedIndex].value,
+                    projection_step: p_step,
+                    projection_trend: p_trend,
+                    projection_level: p_level,
             }
     });
 }

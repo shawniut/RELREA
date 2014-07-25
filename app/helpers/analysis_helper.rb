@@ -101,4 +101,36 @@ module AnalysisHelper
 		return data
 	end
 
+	def get_projected_RR_series data, a, b, h, lt0, bt0
+
+		projected_series = []
+
+
+		(1..data.length).each do |i|
+
+			d = data[i-1]
+
+			logger.debug "Shawn1: #{d}"
+			lt = a*d[1] + (1-a)*(lt0 + bt0)
+			bt = b*(lt-lt0) + (1-b)*bt0
+
+			yth = lt + bt
+
+			lt0 = lt
+			bt0 = bt
+
+			projected_series << [data[i-1][0]+7, yth.round(2)]
+		end
+
+		(2..h).each do |i|
+			last_date = data[data.length-1][0]
+			last_date += 7
+			projected_series << [last_date, (lt0 + i*bt0).round(3)]
+		end
+
+		logger.debug "Shawn: #{projected_series}"
+		return projected_series
+
+	end
+
 end

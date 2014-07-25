@@ -18,6 +18,16 @@ class AnalysisController < ApplicationController
       @selected_index = params["selected_index"]
     end
 
+    @trend = 0.2
+    @level = 0.8
+    @step = 1;
+
+    if params["projection_trend"].to_f != 0.0
+       @trend = params["projection_trend"].to_f
+       @level = params["projection_level"].to_f
+       @step = params["projection_step"].to_f
+    end
+
     if params["moving_average_selected_index"] != nil
       @moving_average_order =  params["moving_average_id"].to_i
       @moving_average_index = params["moving_average_selected_index"]
