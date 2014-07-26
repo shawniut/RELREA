@@ -8,13 +8,13 @@
 	<div id = "vertmenu">
 	<h1><%=@Project.name%></h1>
 		<ul>
+			<li>
+				<%= link_to "Readiness Analysis Dashboard", { controller: "analysis", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
+			</li>
+			<li>
+				<%= link_to "Decision Strategies", { controller: "dashboard", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
+			</li>
 			
-			<li>
-				<%= link_to "Decision Strategy", { controller: "dashboard", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
-			</li>
-			<li>
-				<%= link_to "Readiness Analysis", { controller: "analysis", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
-			</li>
 			<!-- <li>
 				<%= link_to "Projected Readiness", { controller: "projected_readiness", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li> -->
