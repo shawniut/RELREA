@@ -63,7 +63,7 @@
 
 $(function(){
 
-		createReadinessWithMovingAverage("readiness-analysis","<%=@Project.name%> Readiness Over Time",7);
+		createReadinessWithMovingAverage("readiness-analysis","Release Readiness Monitoring and Analysis Dashboard",7);
 		createAxises();
 
 		<% @Releases.each do |release| %>
