@@ -46,7 +46,7 @@ class Project < ActiveRecord::Base
 		start_date = self.info.start_date
 		data = []
 		self.rattributes.each do |r|
-			data << r.metric.name + "(#{r.metric.code})"
+			data << r.metric.ra + "(#{r.metric.code})"
 		end
 		return data
 	end

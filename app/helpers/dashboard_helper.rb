@@ -54,11 +54,11 @@ module DashboardHelper
 			moderately_pessimistic_readiness = get_moderately_pessimistic_readiness rattributes
 			days = (end_date-start_date).to_i
 			
-			average_data << [days, average_radiness.round(2)]
-			optimistic_data << [days, optimistic_radiness.round(2)]
-			pessimistic_data << [days, pessimistic_radiness.round(2)]
-			moderately_pessimistic_data << [days, moderately_pessimistic_readiness.round(2)]
-			moderately_optimistic_data << [days, moderately_optimistic_readiness.round(2)]				
+			average_data << [days/7, average_radiness.round(2)]
+			optimistic_data << [days/7, optimistic_radiness.round(2)]
+			pessimistic_data << [days/7, pessimistic_radiness.round(2)]
+			moderately_pessimistic_data << [days/7, moderately_pessimistic_readiness.round(2)]
+			moderately_optimistic_data << [days/7, moderately_optimistic_readiness.round(2)]				
 		end
 		
 		average_data = average_data.sort_by { |e| e[0] }

@@ -8,7 +8,9 @@
 				<tr>
 					<th>Select</th>
 					<th>Source Tool</th>
-					<th>Readiness Attribute</th>
+					<th>Readiness Attributes</th>
+					<th>Acronym</th>
+					<th>Metrics</th>
 					<th>Readiness Dimension</th>
 					
 					
@@ -28,6 +30,8 @@
 								<td><input type="checkbox"  id = "<%=m.id%>" name = "<%=m.id%>" value = "<%=m.id%>" /> </td>
 							<%end%>
 						<td><%=m.source %></td>
+						<td><%=m.ra %></td>
+						<td><%=m.code %></td>
 						<td><%=m.name %></td>
 						<td><%=m.dimension %></td>	
 					</tr>

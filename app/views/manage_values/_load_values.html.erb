@@ -14,10 +14,10 @@
 		<%=select_tag 'metric_id', options_for_select(@Project.rattributes.collect{ |a| [a.metric.name, a.id] }), {:include_blank => true } %>
 	</p>
 	<p>
-		<%= label_tag(:start_date, "Load values from project Start Date") %>
+		<%= label_tag(:start_date, "Load values from project start date") %>
 		<%= text_field(:project, :start_date, :value => @Project.releases.reverse[0].start_date, :readonly => true, :size=>15) %>
 
-		<%= label_tag(:today, "to end_date:") %>
+		<%= label_tag(:today, "to end date:") %>
 		<%= text_field(:project, :end_date,:value => @Project.releases.reverse[0].date, :readonly => true, :size=>15) %>
 		<%= label_tag(:interval, "with interval of:") %>
 		<%= text_field(:project,:interval, :size=>3, :value=>7) %> days

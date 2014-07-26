@@ -42,26 +42,40 @@ class RawFile < ActiveRecord::Base
 
 	def data
 
-		Dataservice::Metric.where(:name=>'Features Implemented', :source=>'Github')[0].update_attributes(:code=>'FI')
-		Dataservice::Metric.where(:name=>'Feature completion rate', :source=>'Github')[0].update_attributes(:code=>'FCR')
-		Dataservice::Metric.where(:name => "Build success rate ", :source => "Travis-CI")[0].update_attributes(:code=>'BSR')
-		Dataservice::Metric.where(:name => "Code churn rate", :source => "Github")[0].update_attributes(:code=>'CCR')
-		Dataservice::Metric.where(:name => "Defect find rate", :source => "Github")[0].update_attributes(:code=>'DFR')
-		Dataservice::Metric.where(:name => "Bug fix rate", :source => "Github")[0].update_attributes(:code=>'BFR')
-		Dataservice::Metric.where(:name => "Pull-request Completion Rate", :source => "Github")[0].update_attributes(:code=>'PCR')
-		Dataservice::Metric.where(:name =>"Defect density", :source => "Github")[0].update_attributes(:code=>'DD')
+		Dataservice::Metric.where(:name=>'Features Implemented', :source=>'Github')[0].update_attributes(:ra=>'Satisfaction of feature implementation')
+		Dataservice::Metric.where(:name=>'Feature completion rate', :source=>'Github')[0].update_attributes(:ra=>'Satisfaction of feature completetion')
+		Dataservice::Metric.where(:name => "Build success rate ", :source => "Travis-CI")[0].update_attributes(:ra=>'Satisfaction of build status')
+		Dataservice::Metric.where(:name => "Code churn rate", :source => "Github")[0].update_attributes(:ra=>'Satisfaction of codebase stabilization')
+		Dataservice::Metric.where(:name => "Code churn rate", :source => "Github")[0].update_attributes(:dimension=>'Implementation')
+		Dataservice::Metric.where(:name => "Defect find rate", :source => "Github")[0].update_attributes(:ra=>'Satisfaction of defect finding')
+		Dataservice::Metric.where(:name => "Bug fix rate", :source => "Github")[0].update_attributes(:ra=>'Satisfaction of bug fixing')
+		Dataservice::Metric.where(:name => "Pull-request Completion Rate", :source => "Github")[0].update_attributes(:ra=>'Satisfaction of pull request 
 
-		Dataservice::Metric.where(:name =>"Bug fix rate", :source => "JIRA")[0].update_attributes(:code=>'BFR')
-		Dataservice::Metric.where(:name =>"Defect find rate", :source => "JIRA")[0].update_attributes(:code=>'DFR')
-		Dataservice::Metric.where(:name => "Feature completion rate", :source => "JIRA")[0].update_attributes(:code=>'FCR')
-		Dataservice::Metric.where(:name => "Improvement Implemented", :source => "JIRA")[0].update_attributes(:code=>'II')
-		Dataservice::Metric.where(:name => "Features Implemented", :source => "JIRA")[0].update_attributes(:code=>'FI')
+completion')
+		Dataservice::Metric.where(:name =>"Defect density", :source => "Github")[0].update_attributes(:ra=>'Satisfaction of coding accuracy')
 
-		Dataservice::Metric.where(:name => "High priority Features implementation ratio", :source => "JIRA")[0].update_attributes(:code=>'HP-FIR')
-		Dataservice::Metric.where(:name => "Low priority Features Implementation ratio", :source => "JIRA")[0].update_attributes(:code=>'LP-FIR')
+		Dataservice::Metric.where(:name =>"Bug fix rate", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of bug fixing')
+		Dataservice::Metric.where(:name =>"Defect find rate", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of defect finding')
+		Dataservice::Metric.where(:name => "Feature completion rate", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of feature completetion')
+		Dataservice::Metric.where(:name => "Improvement Implemented", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of improvement implementation')
+		Dataservice::Metric.where(:name => "Features Implemented", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of feature implementation')
 
-		Dataservice::Metric.where(:name => "High priority improvement implementation ratio", :source => "JIRA")[0].update_attributes(:code=>'HP-IIR')
-		Dataservice::Metric.where(:name => "Low priority improvement implementation ratio", :source => "JIRA")[0].update_attributes(:code=>'LP-IIR')
-		Dataservice::Metric.where(:name => "Improvement implementation ratio", :source => "JIRA")[0].update_attributes(:code=>'IIR')
+		Dataservice::Metric.where(:name => "High priority Features implementation ratio", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of high 
+
+priority feature implementation')
+		Dataservice::Metric.where(:name => "Low priority Features Implementation ratio", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of low 
+
+priority feature implementation')
+
+		Dataservice::Metric.where(:name => "High priority improvement implementation ratio", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of high 
+
+priority improvement implementation')
+		Dataservice::Metric.where(:name => "Low priority improvement implementation ratio", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of low 
+
+priorityimprovement implementation')
+		Dataservice::Metric.where(:name => "Improvement implementation ratio", :source => "JIRA")[0].update_attributes(:ra=>'Satisfaction of improvement 
+
+implementation')
 	end
+
 end

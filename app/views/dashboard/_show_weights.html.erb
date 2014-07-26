@@ -11,7 +11,7 @@
 <% below_expectation_data = [] %>
 
 <%(0..decision_strategies_names.length-1).each do |i| %>
-	<%actual_rr=decision_strategies_data[i].select{ |u| u[0] == @days}[0] %>
+	<%actual_rr=decision_strategies_data[i].select{ |u| u[0]*7 == @days}[0] %>
 	
 
 	<table class = "db-table">
@@ -78,7 +78,7 @@ Data for : <%=@release.name%>
 
 $(function(){
 
-	createDecisionStrategySummaryChart("decision-strategy-summary","Impact of various decision strategies at t = <%=@days%>");
+	createDecisionStrategySummaryChart("decision-strategy-summary","Impact of various decision strategies at t = <%=@days/7%> weeks");
 });
 
 function createDecisionStrategySummaryChart(container,chart_title){
@@ -110,7 +110,7 @@ function createDecisionStrategySummaryChart(container,chart_title){
             },
 
             series: [ {
-                name: 'Below Expectation',
+                name: 'Below Requested',
                 color: "#FA5858",
                 data: <%=below_expectation_data%>
             },{
