@@ -27,6 +27,8 @@
 </div>
 <div id="values">
 </div>
+
+<p><%=link_to "Delete Values",  {:controller => "manage_values", :action=> "delete_values", :id => @Project.id}, :method=>"POST", :remote=>"true" %></p>
 <div id="show-values">
 
 </div>

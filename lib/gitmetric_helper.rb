@@ -48,7 +48,7 @@ module GitmetricHelper
         return bug_fix_rate repo, user, start_date, end_date,rattribute.label,rattribute.raw_file.file
       
       elsif rattribute.metric.name == "Bug fix rate" and project.jira != nil
-        return bug_fix_rate_jira repo, user, start_date, end_date,rattribute.label,rattribute.raw_file.file
+        return bug_fix_rate_jira repo, user, start_date, end_date,rattribute.label,rattribute.raw_file.file, (get_DFR_raw_file project)
       
       elsif rattribute.metric.name == "Pull-request Completion Rate"
         return get_pull_request_completion_rate repo, user, start_date, end_date, rattribute.raw_file.file
@@ -71,6 +71,16 @@ module GitmetricHelper
 
     end 
 
+    def get_DFR_raw_file project
+
+      project.rattributes.each do |r|
+        if r.metric.code == 'DFR'
+          return r.raw_file.file
+        end
+      end
+
+    end
+
     def get_feature_count_for_rp2 label, release 
 
       if release.name == 'Milestone 1'
@@ -92,7 +102,7 @@ module GitmetricHelper
           return 12
         end
        elsif release.name == 'RP 2.0'
-        logger.debug "*******************888888888888888888888888888888888888888888888888888888888888888888888888"
+        logger.debug "*******************"
         if label == 'FH'
           return 23
         elsif label == 'FL'
@@ -141,6 +151,24 @@ module GitmetricHelper
       return dfr.round(2)
     end
 
+    def get_all_defects_jira repo, user, start_date, end_date, label, issues
+      days = (end_date-start_date).to_i
+
+      total_count = 0
+     
+      issues["issues"].each do |issue|
+        created_at = issue['fields']['created'].to_date
+        issue_type = issue['fields']['issuetype']['name']
+        state = issue['fields']['status']['name'] 
+        if created_at >=start_date and created_at <= end_date
+           total_count+=1
+        end
+      end
+
+      
+      return total_count
+    end
+
     def get_defect_density repo, user, start_date, end_date, data, project
 
       code_churn = 0.0
@@ -180,7 +208,7 @@ module GitmetricHelper
 
   	end
 
-      def bug_fix_rate_jira repo, user, start_date, end_date,label,issues
+      def bug_fix_rate_jira repo, user, start_date, end_date,label,issues, dfr_issues
 
        #logger.debug "Shawn2#{issues["issue"]}"
        total_count = 0
@@ -188,17 +216,22 @@ module GitmetricHelper
           updated_at = issue['fields']['updated'].to_date
           issue_type = issue['fields']['issuetype']['name']
           state = issue['fields']['status']['name'] 
-          if updated_at >=(end_date-21.days) and updated_at <= end_date
+          if updated_at >=start_date and updated_at <= end_date
              total_count+=1
           end
       end
 
-      days = (end_date-start_date).to_i
-      bfr = (total_count.to_f/21.0)
+      defect_count = get_all_defects_jira repo, user, start_date, end_date,label,dfr_issues
       
-      return bfr.round(2)
-
+      if defect_count == 0
+        return 1
+      elsif total_count == 0
+        return 0
+      else
+        return (total_count.to_f/defect_count.to_f).round(2)
+      end
     end
+
 
 
   	def feature_completion_ratio repo, user, start_date, end_date,label, issues

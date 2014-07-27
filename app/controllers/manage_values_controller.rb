@@ -55,6 +55,21 @@ class ManageValuesController < ApplicationController
 
   end
 
+  def delete_values
+
+    @Project = Project.find_by(:id=>params[:id])
+    @releases = @Project.releases
+    
+    @Project.rattributes.each do |r|
+      r.values.destroy_all
+    end
+
+    respond_to do |format|
+      format.js 
+    end
+
+  end
+
   def new
 
   	@start_date = params[:project][:start_date].to_date
