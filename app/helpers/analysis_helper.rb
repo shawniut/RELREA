@@ -1,6 +1,6 @@
 module AnalysisHelper
 
-	def get_attributes_impact project,release,day
+	def get_attributes_impact project,release
 		average_data= []
 		optimistic_data = []
 		pessimistic_data = []
@@ -27,21 +27,23 @@ module AnalysisHelper
 			average_data.each do |p|
 			
 				q = attribute_satisfaction_data[i]
-					if q[1] < p[1] and p[0] <= day
+					if q[1] < p[1] 
 						negetive_impact_count += 1
-						negetive_impact_sum += (p[1]-q[1])
-					elsif q[1] > p[1] and p[0] <= day
+						negetive_impact_sum += (p[1]-q[1])*ra.weight
+					elsif q[1] > p[1] 
 						positive_impact_count += 1
-						positive_impact_sum += (q[1]-p[1])
+						positive_impact_sum += (q[1]-p[1])*ra.weight
 						
 					end
 				i+=1
 			end
 
-			positive_series << (positive_impact_count==0 ? 0 : (positive_impact_sum/positive_impact_count).round(2))
-			negetive_series << (negetive_impact_count==0 ? 0 : (negetive_impact_sum/negetive_impact_count).round(2))
-			positive_series_percentage << ((positive_impact_count/average_data.length)*100).round(2)
-			negetive_series_percentage << ((negetive_impact_count/average_data.length)*100).round(2)
+			positive_series << (positive_impact_count==0 ? 0 : ((positive_impact_sum/positive_impact_count)).round(2))
+			negetive_series << (negetive_impact_count==0 ? 0 : ((negetive_impact_sum/negetive_impact_count)).round(2))
+			# positive_series << (positive_impact_count==0 ? 0 : ((positive_impact_sum/positive_impact_count)*ra.weight).round(2))
+			# negetive_series << (negetive_impact_count==0 ? 0 : ((negetive_impact_sum/negetive_impact_count)*ra.weight).round(2))
+			positive_series_percentage << positive_impact_count
+			negetive_series_percentage << negetive_impact_count
 
 
 		end
@@ -54,7 +56,7 @@ module AnalysisHelper
 	end
 
 
-	def get_positive_negetive_chart overall_data, attribute_data, positive_series,negetive_series
+	def get_positive_negetive_chart overall_data, attribute_data, positive_series,negetive_series, weight
 
 		#positive_series = []
 		#negetive_series = []
@@ -63,11 +65,13 @@ module AnalysisHelper
 		overall_data.each do |p|
 			q = attribute_data[i]
 			
+			d = -(p[1]-q[1])*weight*5
+
 			 if p[1] >= q[1]
-			 	negetive_series << [p[0],p[1],q[1]]
+			 	negetive_series << [p[0],p[1], p[1] + d]
 			 	positive_series << [p[0],p[1],p[1]]
 			 elsif p[1] <= q[1]
-			 	positive_series << [p[0],q[1],p[1]]
+			 	positive_series << [p[0],p[1] + d,p[1]]
 			 	negetive_series << [p[0],p[1],p[1]]
 			 		
 			 end 

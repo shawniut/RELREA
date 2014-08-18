@@ -136,7 +136,8 @@ $(function(){
 					<% attribute_satisfaction_data =  ra.get_satisfaction_over_time @Project, release%>
 					<%positive_series = []%>
 					<%negetive_series = []%>
-					<% get_positive_negetive_chart @average_data, attribute_satisfaction_data, positive_series, negetive_series %>
+					<% get_positive_negetive_chart @average_data, attribute_satisfaction_data, positive_series, negetive_series, ra.weight %>
+					
 
 					<%if @analysis_type == 1 or @analysis_type != 2 %>
 						dashboart_chart.addSeries({

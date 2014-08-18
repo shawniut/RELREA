@@ -64,6 +64,21 @@
 
 <%end%>
 
+Data for : Impact analysis (negetive, positive)
+<%index = 0%>
+    <%series_data = get_attributes_impact  @Project, @release%>
+    <table class = "db-table">
+	    <% @Project.rattributes.each do |ra| %>
+	              
+	        <tr>
+	        	<td><%=ra.metric.code%></td>
+				<td><%=series_data[2][index]%></td>
+				<td><%=series_data[3][index]%></td>
+			</tr>
+	        <%index = index+1%>
+		<%end%>
+	</table>
+
 Data for : <%=@release.name%>
 <table class = "db-table">
 	<%average_data.each do |d|%>
@@ -73,6 +88,7 @@ Data for : <%=@release.name%>
 		</tr>
 	<%end%>
 </table>
+
 
 <script type="text/javascript">
 
