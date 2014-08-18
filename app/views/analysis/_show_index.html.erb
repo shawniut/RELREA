@@ -63,7 +63,7 @@
 
 $(function(){
 
-		createReadinessWithMovingAverage("readiness-analysis","Release Readiness Monitoring and Analysis Dashboard",7);
+		createReadinessWithMovingAverage("readiness-analysis","Release Readiness Over Time",7);
 		createAxises();
 
 		<% @Releases.each do |release| %>
@@ -137,7 +137,7 @@ $(function(){
 					<%positive_series = []%>
 					<%negetive_series = []%>
 					<% get_positive_negetive_chart @average_data, attribute_satisfaction_data, positive_series, negetive_series, ra.weight %>
-					
+
 
 					<%if @analysis_type == 1 or @analysis_type != 2 %>
 						dashboart_chart.addSeries({
