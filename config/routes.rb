@@ -33,6 +33,12 @@ RELREA::Application.routes.draw do
         post 'load_attribute_satisfaction'
     end
   end
+  resources :monitor_readiness do
+    member do
+        post 'index'
+        post 'load_attribute_satisfaction'
+    end
+  end
   resources :release_to_release do
     member do
         post 'index'

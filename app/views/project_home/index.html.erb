@@ -9,7 +9,10 @@
 	<h1><%=@Project.name%></h1>
 		<ul>
 			<li>
-				<%= link_to "Readiness Analysis Dashboard", { controller: "analysis", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
+				<%= link_to "Monitoring Release Readiness", { controller: "monitor_readiness", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
+			</li>
+			<li>
+				<%= link_to "Analysis of Release Readiness", { controller: "analysis", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>
 			</li>
 			<li>
 				<%= link_to "Decision Strategies", { controller: "dashboard", action:"index", id: @Project.id},:method=>"POST", :remote=>"true" %>

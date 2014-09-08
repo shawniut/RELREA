@@ -2,8 +2,8 @@ $(function(){
 
 	//createAttributesMovingAverageChart("bottlenec-analysis", "Bottlenec Factor Analysis");
 	<%order = @moving_average_order%>
-	<%order =1 %>
-	createAttributeSatisfactionSpiderWebChart("attribute-analysis", "In-Depth Visibility on RR Status");
+	<%order =3 %>
+	createAttributeSatisfactionSpiderWebChart("attribute-analysis", "Comparison of the current level of satisfaction with last 3 observation");
 	<%@moving_average_data = get_all_series_data @Project, @average_data, @optimistic_data, @pessimistic_data, @release %>
 	var overall_ma_data = <%=@moving_average_data%>;
 	<%colors = ['#FF3300','#3333FF','#000099', '#663300','#0000FF','#E819E8','#FF6666','#9900FF']%>
@@ -14,15 +14,15 @@ $(function(){
             //createAttributesImpactonOverallRRChart("impact-of-RR-attributes", "Individual attribute's impact on overall RR score upto <%=@days%> days", <%#=series_data%>);
             
 
-			//<%(1..order).each do |i|%>
-				<%@days += @interval*order %>
+			<%(1..order).each do |i|%>
+				<%@days += @interval %>
 				spiderWebChart.addSeries({
 	            	name: "Sat(<%= (@release.start_date+@days.days).strftime("%b %d, %Y")%>)",
-	            	color: '#000000', //"<%=raw colors[order-i]%>",
+	            	color: "<%=raw colors[order-i]%>",
 	            	data:<%=@Project.get_satisfaction_level_by_date @days.to_i, @release %>
 	        	});
 	        	        	
-	       //<%end%>
+	       <%end%>
 
 
            
@@ -51,7 +51,6 @@ function createAttributeSatisfactionSpiderWebChart(container, title ){
                 renderTo: container,
                 polar: true,
 	        	type: 'line'
-
         },
 		title: {
                 text: title,
@@ -69,8 +68,7 @@ function createAttributeSatisfactionSpiderWebChart(container, title ){
             labels: {
                 style: {
                     color: '#000000',
-                    fontWeight: 'bold',
-                    fontSize: "14px"
+                    fontWeight: 'bold'
                 }
             }
 	    },
